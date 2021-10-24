@@ -19,8 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SwipeActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".SwipeActivity"
+            android:theme="@style/Theme.ActionBar"/>
+        <activity android:name=".NavigationActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

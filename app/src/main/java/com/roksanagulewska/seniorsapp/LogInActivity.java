@@ -1,8 +1,5 @@
 package com.roksanagulewska.seniorsapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +7,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -53,7 +53,7 @@ public class LogInActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "Signing in succesfull!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), SwipeActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
                     startActivity(intent);
                     finish();
                 }else{
@@ -61,14 +61,6 @@ public class LogInActivity extends AppCompatActivity {
                 }
             }
         });
-        /*
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                Toast.makeText(getApplicationContext(), "Signing in succesfull!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), SwipeActivity.class);
-                startActivity(intent);
-                finish();
-            }*/
 
 
     }
