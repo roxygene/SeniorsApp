@@ -4,6 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background1"
+    android:padding="30dp"
     tools:context=".StartingActivity">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/start1"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="260dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/white_button"
+        android:backgroundTint="@null"
+        android:fontFamily="sans-serif-light"
+        android:includeFontPadding="false"
+        android:onClick="goToLogInOnClick"
+        android:text="@string/start2"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/lavender"
+        android:textSize="26dp"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/registerBtn"
+        android:layout_width="260dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="45dp"
+        android:background="@drawable/white_button"
+        android:backgroundTint="@null"
+        android:text="@string/start3"
+        android:textAlignment="center"
+        android:textColor="@color/lavender"
+        android:textSize="26dp"
+        android:fontFamily="sans-serif-light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginBtn"
+        android:onClick="goToRegisterOnClick"
+        app:backgroundTint="@null"
+        android:textAllCaps="false"
+        android:includeFontPadding="false"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
