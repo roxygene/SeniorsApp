@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "379590508639",
+    "project_id": "seniorsapp-6f519",
+    "storage_bucket": "seniorsapp-6f519.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379590508639:android:72310859da0471fe2bdbea",
+        "android_client_info": {
+          "package_name": "com.roksanagulewska.seniorsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "379590508639-6r2h9djabjh0sg7jtbg3dsv7fa204123.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roksanagulewska.seniorsapp",
+            "certificate_hash": "fabe6e7aa6ffb2a2e973e215806ec9a0bd253619"
+          }
+        },
+        {
+          "client_id": "379590508639-bqbbdc1373reda339prnmn1qe1ruvjau.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsWTX-Pjfete6KXk-R5wECKXKZ14B70fY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "379590508639-bqbbdc1373reda339prnmn1qe1ruvjau.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
