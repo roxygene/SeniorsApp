@@ -1,4 +1,4 @@
-package com.roksanagulewska.seniorsapp;
+package com.roksanagulewska.seniorsapp.SwipeCards;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.roksanagulewska.seniorsapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

@@ -1,7 +1,9 @@
-package com.roksanagulewska.seniorsapp;
+package com.roksanagulewska.seniorsapp.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -11,6 +13,12 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.roksanagulewska.seniorsapp.Fragments.FindNewFriendsFragment;
+import com.roksanagulewska.seniorsapp.Fragments.MessagesFragment;
+import com.roksanagulewska.seniorsapp.Fragments.MyProfileFragment;
+import com.roksanagulewska.seniorsapp.R;
+import com.roksanagulewska.seniorsapp.Fragments.SettingsFragment;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,11 +36,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState(); //rotacja hamburgera zależnie od tego czy szufladę nawigacji jest otwarty czy nie
+        toggle.syncState(); //rotacja hamburgera zależnie od tego czy szufladę nawigacji jest otwarta czy nie
 
         if (savedInstanceState == null) { //nie będzie się ładować przy każdym uruchomieniu onCreate
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FindNewFriendsFragment()).commit();
@@ -57,7 +66,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
                 break;
             case R.id.nav_logout:
-
+                logOut();
                 break;
         }
 
@@ -73,5 +82,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void logOut() {
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(NavigationActivity.this, StartingActivity.class);
+        startActivity(intent);
     }
 }

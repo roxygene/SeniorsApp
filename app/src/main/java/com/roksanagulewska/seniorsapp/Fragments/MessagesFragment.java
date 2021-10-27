@@ -1,18 +1,21 @@
-package com.roksanagulewska.seniorsapp;
+package com.roksanagulewska.seniorsapp.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.roksanagulewska.seniorsapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MyProfileFragment#newInstance} factory method to
+ * Use the {@link MessagesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyProfileFragment extends Fragment {
+public class MessagesFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,7 +26,7 @@ public class MyProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public MyProfileFragment() {
+    public MessagesFragment() {
         // Required empty public constructor
     }
 
@@ -33,11 +36,11 @@ public class MyProfileFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MyProfileFragment.
+     * @return A new instance of fragment MessagesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MyProfileFragment newInstance(String param1, String param2) {
-        MyProfileFragment fragment = new MyProfileFragment();
+    public static MessagesFragment newInstance(String param1, String param2) {
+        MessagesFragment fragment = new MessagesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -54,10 +57,11 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_profile, container, false);
+        return inflater.inflate(R.layout.fragment_messages, container, false);
     }
 }

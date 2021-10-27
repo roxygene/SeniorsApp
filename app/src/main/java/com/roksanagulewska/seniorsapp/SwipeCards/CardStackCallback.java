@@ -1,4 +1,4 @@
-package com.roksanagulewska.seniorsapp;
+package com.roksanagulewska.seniorsapp.SwipeCards;
 
 import androidx.recyclerview.widget.DiffUtil;
 

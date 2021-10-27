@@ -1,14 +1,14 @@
 package com.roksanagulewska.seniorsapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-public class UsersInfoActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class UsersPreferencesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_users_info);
+        setContentView(R.layout.activity_users_preferences);
     }
 }

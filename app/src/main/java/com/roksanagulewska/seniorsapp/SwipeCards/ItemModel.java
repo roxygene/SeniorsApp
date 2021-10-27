@@ -1,4 +1,4 @@
-package com.roksanagulewska.seniorsapp;
+package com.roksanagulewska.seniorsapp.SwipeCards;
 
 public class ItemModel {
     private int image;

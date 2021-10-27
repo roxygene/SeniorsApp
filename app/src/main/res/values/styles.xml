@@ -31,4 +31,5 @@
         <item name="spinBars">true</item>
         <item name="color">@color/lavender</item>
     </style>
+
 </resources>

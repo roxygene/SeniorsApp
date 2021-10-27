@@ -1,4 +1,4 @@
-package com.roksanagulewska.seniorsapp;
+package com.roksanagulewska.seniorsapp.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.roksanagulewska.seniorsapp.R;
+import com.roksanagulewska.seniorsapp.SwipeCards.CardStackAdapter;
+import com.roksanagulewska.seniorsapp.SwipeCards.CardStackCallback;
+import com.roksanagulewska.seniorsapp.SwipeCards.ItemModel;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
