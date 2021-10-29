@@ -20,9 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SwipeActivity"
-            android:theme="@style/Theme.ActionBar" />
         <activity android:name=".Activities.NavigationActivity" />
 
         <meta-data

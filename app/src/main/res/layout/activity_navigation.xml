@@ -8,7 +8,8 @@
     tools:context=".Activities.NavigationActivity"
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,12 +18,11 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="60dp"
             android:background="@color/white"
             android:id="@+id/toolbar"
-            app:titleTextColor="@color/lavender"
-            app:subtitleTextColor="@color/lime"
-            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@color/white"
+            app:subtitleTextColor="@color/white"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:elevation="4dp"/>
 
@@ -33,26 +33,37 @@
             android:background="@color/white">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hello World!"
-                android:textColor="@color/lime"
+                android:text="Sorry, we can't find new friends for you! Try again later."
+                android:textColor="@color/color5"
+                android:textSize="36dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:padding="25dp"/>
 
         </FrameLayout>
 
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:layout_width="200dp"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:id="@+id/nav_view"
         app:menu="@menu/nav_menu"
-        android:background="@color/lavender"/>
+        android:background="@color/color1"
+        app:itemTextAppearance="@style/NavigationDrawerStyle"
+        android:theme="@style/NavigationDrawerStyle"
+        app:itemHorizontalPadding="10dp"
+        app:itemIconPadding="10dp"
+        app:itemIconSize="40dp"
+        app:theme="@style/NavigationDrawerStyle"
+    />
 
 
 

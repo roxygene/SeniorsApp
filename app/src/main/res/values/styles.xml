@@ -2,10 +2,10 @@
 <resources>
     <style name="Widget.MaterialComponents.TextInputLayout.FilledBox" parent="Base.Widget.MaterialComponents.TextInputLayout">
         <!-- underline color in FilledBox style -->
-        <item name="boxStrokeColor">@color/lavender</item>
+        <item name="boxStrokeColor">@color/color3</item>
 
         <!-- The color of the label when it is collapsed and the text field is active -->
-        <item name="hintTextColor">@color/lavender</item>
+        <item name="hintTextColor">@color/color3</item>
         ....
     </style>
 
@@ -13,10 +13,9 @@
         <item name="android:textAllCaps">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="colorPrimary">@color/lime</item>
-        <item name="colorAccent">@color/lime</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="homeAsUpIndicator">@drawable/ic_lavender_hamburger</item>
+        <item name="colorPrimary">@color/color1</item>
+        <item name="colorAccent">@color/color1</item>
+        <item name="drawerArrowStyle">@style/DrawerHamburgerStyle</item>
     </style>
 
     <style name="Theme.NoActionBar" parent="Theme.MaterialComponents.NoActionBar">
@@ -24,12 +23,26 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="drawerArrowStyle">@style/DrawerHamburgerStyle</item>
     </style>
 
-    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@color/lavender</item>
+    <style name="NavigationDrawerStyle">
+        <item name="android:textSize">30dp</item><!-- text size in menu-->
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="colorControlHighlight">@color/black</item>
+        <item name="colorPrimary">@color/white</item>
+
     </style>
+
+    <style name="DrawerHamburgerStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/color1</item>
+    </style>
+
+
+
+
 
 </resources>
