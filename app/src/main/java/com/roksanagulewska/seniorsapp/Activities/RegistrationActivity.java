@@ -19,7 +19,7 @@ import com.roksanagulewska.seniorsapp.R;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private EditText emailEditTxt, passwordEditTxt;
+    private EditText emailEditTxt, passwordEditTxt, password2EditTxt;
     private Button registerBtn;
 
     private FirebaseAuth auth;
@@ -31,6 +31,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
         emailEditTxt = findViewById(R.id.emailEditTxt);
         passwordEditTxt = findViewById(R.id.passwordEditTxt);
+        password2EditTxt = findViewById(R.id.password2EditTxt);
+
         registerBtn = findViewById(R.id.registerBtn);
 
         auth = FirebaseAuth.getInstance();
@@ -41,11 +43,14 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = emailEditTxt.getText().toString();
                 String password = passwordEditTxt.getText().toString();
+                String password2 = password2EditTxt.getText().toString();
 
-                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(password2)) {
                     Toast.makeText(getApplicationContext(), "Please add all required informations.", Toast.LENGTH_SHORT).show();
                 }else if(password.length() < 8) {
                     Toast.makeText(getApplicationContext(), "Your password has to contain at least 8 characters.", Toast.LENGTH_SHORT).show();
+                }else if(!password2.equals(password)) {
+                    Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_SHORT).show();
                 }else {
                     registerUser(email, password);
                 }
