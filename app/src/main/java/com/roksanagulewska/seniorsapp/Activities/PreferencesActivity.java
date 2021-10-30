@@ -9,21 +9,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.roksanagulewska.seniorsapp.R;
 
-public class UsersInfoActivity extends AppCompatActivity {
+public class PreferencesActivity extends AppCompatActivity {
 
-    Button confirmInfoBtn;
+    Button confirmPrefBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_users_info);
+        setContentView(R.layout.activity_preferences);
 
-        confirmInfoBtn = findViewById(R.id.confirmInfoButton);
+        confirmPrefBtn = findViewById(R.id.confirmPrefButton);
     }
 
-    public void goToPrefOnClick(View view)
+    public void goToUsersProfileOnClick(View view)
     {
-        Intent intent = new Intent(getApplicationContext(), PreferencesActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
         startActivity(intent);
         finish();
     }

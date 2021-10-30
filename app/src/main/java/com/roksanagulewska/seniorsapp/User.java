@@ -9,7 +9,7 @@ public class User {
     private int age; //konto
     private String sex; //konto
     private String localisation; //profile
-    private String preferences; //profile
+    private String preferencedSex; //profile
     private String description; //profile
     private Bitmap mainPicture; //profile
     private int minPrefAge; //profile
@@ -65,12 +65,12 @@ public class User {
         this.localisation = localisation;
     }
 
-    public String getPreferences() {
-        return preferences;
+    public String getPreferencedSex() {
+        return preferencedSex;
     }
 
-    public void setPreferences(String preferences) {
-        this.preferences = preferences;
+    public void setPreferencedSex(String preferencedSex) {
+        this.preferencedSex = preferencedSex;
     }
 
     public String getDescription() {

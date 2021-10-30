@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">SeniorsApp</string>
+    <string name="okButton">OK</string>
     <string name="start1">Welcome in SeniorsApp!</string>
     <string name="start2">Sign in</string>
     <string name="start3">Sign up</string>
@@ -10,6 +11,20 @@
     <string name="registration2">e-mail</string>
     <string name="registration3">password</string>
     <string name="users_info1">Give us some information about yourself</string>
+    <string name="users_info2">Name:</string>
+    <string name="users_info3">Localisation:</string>
+    <string name="users_info4">Age:</string>
+    <string name="users_info5">Sex:</string>
+    <string name="users_info6">Female</string>
+    <string name="users_info7">Male</string>
+    <string name="preferences1">Fill in your preferences</string>
+    <string name="preferences2">I would like to meet:</string>
+    <string name="preferences3">Females</string>
+    <string name="preferences4">Males</string>
+    <string name="preferences5">Age range:</string>
+    <string name="preferences6">Min age:</string>
+    <string name="preferences7">Max age:</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- TODO: Remove or change this placeholder text -->

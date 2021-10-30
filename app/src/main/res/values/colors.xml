@@ -3,9 +3,11 @@
     <color name="color1">#034748</color>
     <color name="color2">#23556A</color>
     <color name="color3">#817FCE</color>
-    <color name="color4">#C0BFE7</color>
+    <color name="color4">#B7B6E2</color>
     <color name="color5">#E01A4F</color>
+    <color name="color6">#068789</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FF808080</color>
+    <color name="light_gray">#BEC5C5</color>
 </resources>
