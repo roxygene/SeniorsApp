@@ -2,12 +2,13 @@ package com.roksanagulewska.seniorsapp;
 
 import android.graphics.Bitmap;
 
-public class User {
-    private String email; //konto
+public class UserDB {
+    private String userId;
+    private String email;
     private String password; //konto
-    private String name; //konto
-    private int age; //konto
-    private String sex; //konto
+    private String name;
+    private int age = 0;
+    private String sex;
     private String localisation; //profile
     private String preferenceSex; //profile
     private String description; //profile
@@ -16,6 +17,15 @@ public class User {
     private int maxPrefAge; //profile
 
     //dodać walidację do setterów
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getEmail() {
         return email;
