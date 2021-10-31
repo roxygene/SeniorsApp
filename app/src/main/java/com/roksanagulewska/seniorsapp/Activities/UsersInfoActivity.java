@@ -38,9 +38,6 @@ public class UsersInfoActivity extends AppCompatActivity {
         sexSwitch = findViewById(R.id.sexSwitch);
         confirmInfoBtn = findViewById(R.id.confirmInfoButton);
 
-
-
-
         //sprawdzanie stanu switcha
         sexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -66,7 +63,7 @@ public class UsersInfoActivity extends AppCompatActivity {
 
                 if(name.isEmpty() || localisation.isEmpty() || age == 0)
                 {
-                    Toast.makeText(getApplicationContext(), "Please add all required informations.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please add all required information.", Toast.LENGTH_SHORT).show();
                 } else {
                     user.setName(name);
                     user.setLocalisation(localisation);

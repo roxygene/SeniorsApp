@@ -10,11 +10,11 @@ public class UserDB {
     private int age = 0;
     private String sex;
     private String localisation; //profile
-    private String preferenceSex; //profile
+    private String preferredSex; //profile
     private String description; //profile
     private Bitmap mainPicture; //profile
-    private int minPrefAge; //profile
-    private int maxPrefAge; //profile
+    private int minPrefAge = 0; //profile
+    private int maxPrefAge = 0; //profile
 
     //dodać walidację do setterów
 
@@ -75,12 +75,12 @@ public class UserDB {
         this.localisation = localisation;
     }
 
-    public String getPreferenceSex() {
-        return preferenceSex;
+    public String getPreferredSex() {
+        return preferredSex;
     }
 
-    public void setPreferenceSex(String preferenceSex) {
-        this.preferenceSex = preferenceSex;
+    public void setPreferredSex(String preferredSex) {
+        this.preferredSex = preferredSex;
     }
 
     public String getDescription() {

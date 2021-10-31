@@ -50,7 +50,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 String password2 = password2EditTxt.getText().toString().trim();
 
                 if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(password2)) {
-                    Toast.makeText(getApplicationContext(), "Please add all required informations.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please add all required information.", Toast.LENGTH_SHORT).show();
                 }else if(password.length() < 8) {
                     Toast.makeText(getApplicationContext(), "Your password has to contain at least 8 characters.", Toast.LENGTH_SHORT).show();
                 }else if(!password2.equals(password)) {
