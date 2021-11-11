@@ -1,6 +1,10 @@
 package com.roksanagulewska.seniorsapp.Activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +27,7 @@ public class LogInActivity extends AppCompatActivity {
     private Button loginBtn;
 
     FirebaseAuth auth;
+    private int backCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +44,16 @@ public class LogInActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = emailEditTxt.getText().toString();
-                String password = passwordEditTxt.getText().toString();
-                loginUser(email, password);
+
+                if (isConnected()) {
+                    String email = emailEditTxt.getText().toString();
+                    String password = passwordEditTxt.getText().toString();
+                    loginUser(email, password);
+                } else {
+                    Intent i = new Intent(getApplicationContext(), LoginInternetAccessActivity.class);
+                    startActivity(i);
+                    finish();
+                }
             }
         });
 
@@ -63,6 +75,41 @@ public class LogInActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    /**
+     * Called when the activity has detected the user's press of the back
+     * key. The {@link #getOnBackPressedDispatcher() OnBackPressedDispatcher} will be given a
+     * chance to handle the back button before the default behavior of
+     * {@link Activity#onBackPressed()} is invoked.
+     *
+     * @see #getOnBackPressedDispatcher()
+     */
+    @Override //działa tak że 2 razy wyjście, a raz nic
+    public void onBackPressed() {
+        backCounter++;
+
+        if (backCounter == 2) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(getApplicationContext(), "Press back again to exit.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //metoda sprawdza czy urządzenie jest połączone z internetem
+    public boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo != null) {
+            if (networkInfo.isConnected()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
 

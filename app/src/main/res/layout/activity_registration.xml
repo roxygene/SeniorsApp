@@ -8,7 +8,6 @@
     android:padding="30dp"
     tools:context=".Activities.RegistrationActivity">
 
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -117,5 +116,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword2" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

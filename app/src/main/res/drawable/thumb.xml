@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
         <shape android:shape="oval">
-            <solid android:color="@color/color3"/>
+            <solid android:color="@color/color1"/>
             <size android:width="100dp"
                 android:height="100dp"/>
         </shape>
@@ -10,7 +10,7 @@
 
     <item android:state_checked="false">
         <shape android:shape="oval">
-            <solid android:color="@color/color1"/>
+            <solid android:color="@color/color3"/>
 
             <size android:width="40dp"
                 android:height="40dp"/>

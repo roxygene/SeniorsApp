@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">SeniorsApp</string>
     <string name="okButton">OK</string>
     <string name="start1">Welcome in SeniorsApp!</string>
@@ -24,6 +24,11 @@
     <string name="preferences5">Age range:</string>
     <string name="preferences6">Min age:</string>
     <string name="preferences7">Max age:</string>
+    <string name="internet1">OOPS!</string>
+    <string name="internetL2">"No Internet Connection! You can't sign in!"</string>
+    <string name="internetR2">"No Internet Connection! You can't sign up!"</string>
+    <string name="internet3">Try Again</string>
+
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
