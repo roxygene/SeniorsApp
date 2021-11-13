@@ -7,14 +7,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.R;
-import com.roksanagulewska.seniorsapp.UserDB;
 
 public class UsersInfoActivity extends AppCompatActivity {
 
@@ -23,9 +18,9 @@ public class UsersInfoActivity extends AppCompatActivity {
     EditText ageEditTxt;
     SwitchCompat sexSwitch;
     Button confirmInfoBtn;
+    String sex;
+    int age = 0;
 
-    UserDB user = new UserDB();
-    DataBaseHelper db = new DataBaseHelper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +33,20 @@ public class UsersInfoActivity extends AppCompatActivity {
         sexSwitch = findViewById(R.id.sexSwitch);
         confirmInfoBtn = findViewById(R.id.confirmInfoButton);
 
+        Intent registerIntent = getIntent(); //intencja która wywołała tą aktywność
+        Bundle registerBundle = registerIntent.getExtras(); // przypisanie bundla który przyszedł z intencją
+        String email = registerBundle.getString("email");
+        String password = registerBundle.getString("password");
+
         //sprawdzanie stanu switcha
         sexSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if(isChecked) { //Male
-                    user.setSex("male");
+                    sex = "male";
                 } else { //Female
-                    user.setSex("female");
+                    sex = "female";
                 }
             }
         });
@@ -54,10 +54,12 @@ public class UsersInfoActivity extends AppCompatActivity {
         confirmInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String name = nameEditTxt.getText().toString().trim();
                 String localisation = localisationEditTxt.getText().toString().trim();
-                int age = Integer.parseInt(ageEditTxt.getText().toString().trim());
+                age = Integer.parseInt(ageEditTxt.getText().toString().trim());
 
+                //wywala wyjątek jak localisation albo name puste
                 name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase(); //formatowanie imienia tak aby zaczynało się od wielkiej litery
                 localisation = localisation.substring(0,1).toUpperCase() + localisation.substring(1).toLowerCase(); //formatowanie miasta tak aby zaczynało się od wielkiej litery
 
@@ -65,15 +67,16 @@ public class UsersInfoActivity extends AppCompatActivity {
                 {
                     Toast.makeText(getApplicationContext(), "Please add all required information.", Toast.LENGTH_SHORT).show();
                 } else {
-                    user.setName(name);
-                    user.setLocalisation(localisation);
-                    user.setAge(age);
-
-                    String uId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    db.addUsersInfo(uId, name, localisation, age, user.getSex());
-
-                    Intent intent = new Intent(getApplicationContext(), PreferencesActivity.class);
-                    startActivity(intent);
+                    Intent infoIntent = new Intent(getApplicationContext(), PreferencesActivity.class);
+                    Bundle infoBundle = new Bundle();
+                    infoBundle.putString("email", email);
+                    infoBundle.putString("password", password);
+                    infoBundle.putString("name", name);
+                    infoBundle.putString("localisation", localisation);
+                    infoBundle.putInt("age", age);
+                    infoBundle.putString("sex", sex);
+                    infoIntent.putExtras(infoBundle);
+                    startActivity(infoIntent);
                     finish();
                 }
             }

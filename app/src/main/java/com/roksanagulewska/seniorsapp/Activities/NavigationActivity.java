@@ -14,17 +14,25 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.Fragments.FindNewFriendsFragment;
 import com.roksanagulewska.seniorsapp.Fragments.MessagesFragment;
 import com.roksanagulewska.seniorsapp.Fragments.MyProfileFragment;
 import com.roksanagulewska.seniorsapp.R;
 import com.roksanagulewska.seniorsapp.Fragments.SettingsFragment;
 
+import java.util.ArrayList;
+
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
     NavigationView navigationView;
+    DataBaseHelper dbHelper = new DataBaseHelper();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,31 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             //otwarcie frgmentu z szukaniem par przy starcie aktywności menu
             navigationView.setCheckedItem(R.id.nav_find_friends);
         }
+
+        /*
+        //próby z bazą danych
+        rootNode = FirebaseDatabase.getInstance();
+        reference = rootNode.getReference("Users");//robi referencje do Users z bazy danych
+
+        //reference.setValue("jakać wartość którą chcemy nadać Users");
+        Query usersId = reference.orderByChild(user.getUserId());
+        String usersIdS = reference.getKey();
+
+
+
+         */
+
+        //Toast.makeText(getApplicationContext(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
+        StringBuilder sb = new StringBuilder();
+        ArrayList<String> list = dbHelper.getAllUsersId();
+
+        for (String id : list)
+        {
+            sb.append(id);
+            sb.append(", ");
+        }
+        String text = "coś: " + sb.toString();
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
     @Override

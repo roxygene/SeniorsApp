@@ -1,8 +1,8 @@
-package com.roksanagulewska.seniorsapp;
+package com.roksanagulewska.seniorsapp.DataBase;
 
 import android.graphics.Bitmap;
 
-public class UserDB {
+public class User {
     private String userId;
     private String email;
     private String password; //konto
@@ -15,9 +15,27 @@ public class UserDB {
     private Bitmap mainPicture; //profile
     private int minPrefAge = 0; //profile
     private int maxPrefAge = 0; //profile
-
     //dodać walidację do setterów
 
+    public User() {
+
+    }
+
+
+    public User(String userId, String email, String password, String name, int age, String sex, String localisation, String preferredSex, String description, Bitmap mainPicture, int minPrefAge, int maxPrefAge) {
+        this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.age = age;
+        this.sex = sex;
+        this.localisation = localisation;
+        this.preferredSex = preferredSex;
+        this.description = description;
+        this.mainPicture = mainPicture;
+        this.minPrefAge = minPrefAge;
+        this.maxPrefAge = maxPrefAge;
+    }
 
     public String getUserId() {
         return userId;
@@ -115,13 +133,3 @@ public class UserDB {
         this.maxPrefAge = maxPrefAge;
     }
 }
-
-
-//dodawanie danych do bazy danych np: jednej gałęzi z nową gałęzią która ma wartość abc
-//FirebaseDatabase.getInstance().getReference().child("gałąź 1").child("gałąź 2").setValue("abcd");
-
-//kiedy chcemy dodać więcej niż jedną gałąź
-//HashMap<String, Object> map = new HashMap<>(); //utworzenie hashmapy
-//map.put("Name", "Roksana");
-//map.put("Email", "Roksana@gmail.com");
-//FirebaseDatabase.getInstance().getReference().child("nazwa usera").updateChildren(map);

@@ -12,17 +12,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
+import com.roksanagulewska.seniorsapp.DataBase.User;
 import com.roksanagulewska.seniorsapp.R;
-import com.roksanagulewska.seniorsapp.UserDB;
 
 public class PreferencesActivity extends AppCompatActivity {
 
     CheckBox femalesCB, malesCB;
     EditText minAgeEditTxt, maxAgeEditTxt;
     Button confirmPrefBtn;
+    int minAge = 0;
+    int maxAge = 0;
+    String preferredSex;
 
-    UserDB user = new UserDB();
-    DataBaseHelper db = new DataBaseHelper();
+    User user;
+    DataBaseHelper dbHelper = new DataBaseHelper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,30 +38,43 @@ public class PreferencesActivity extends AppCompatActivity {
         maxAgeEditTxt = findViewById(R.id.maximalAgeEditText);
         confirmPrefBtn = findViewById(R.id.confirmPrefButton);
 
+        Intent infoIntent = getIntent(); //intencja która wywołała tą aktywność
+        Bundle infoBundle = infoIntent.getExtras(); // przypisanie bundla który przyszedł z intencją
+        String email = infoBundle.getString("email");
+        String password = infoBundle.getString("password");
+        String name = infoBundle.getString("name");
+        String localisation = infoBundle.getString("localisation");
+        int age = infoBundle.getInt("age");
+        String sex = infoBundle.getString("sex");
 
         confirmPrefBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int minAge = Integer.parseInt(minAgeEditTxt.getText().toString().trim());
-                int maxAge = Integer.parseInt(maxAgeEditTxt.getText().toString().trim());
+                minAge = Integer.parseInt(minAgeEditTxt.getText().toString().trim());
+                maxAge = Integer.parseInt(maxAgeEditTxt.getText().toString().trim());
 
                 if ((!femalesCB.isChecked() && !malesCB.isChecked()) || minAge == 0 || maxAge == 0)
                 {
-                    Toast.makeText(getApplicationContext(), "Please add all required informations.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please add all required information.", Toast.LENGTH_SHORT).show();
                 } else {
-                    user.setMinPrefAge(minAge);
-                    user.setMaxPrefAge(maxAge);
 
                     if (femalesCB.isChecked() && malesCB.isChecked()) {
-                        user.setPreferredSex("both");
+                        preferredSex = "both";
                     }else if (femalesCB.isChecked() && !malesCB.isChecked()) {
-                        user.setPreferredSex("females");
+                        preferredSex = "females";
                     } else {
-                        user.setPreferredSex("males");
+                        preferredSex = "males";
                     }
 
-                    String uId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    db.addUsersPreferences(uId, user.getPreferredSex(), minAge, maxAge);
+                    String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    user = new User(currentUserId, email, password, name, age, sex, localisation, preferredSex, null, null, minAge, maxAge);
+                    dbHelper.addUserToDB(user).addOnSuccessListener(success->
+                    {
+                        Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
+                    }).addOnFailureListener(error->
+                    {
+                        Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
 
                     Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
                     startActivity(intent);

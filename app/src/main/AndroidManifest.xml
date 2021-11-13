@@ -14,7 +14,6 @@
         android:theme="@style/Theme.NoActionBar">
         <activity android:name=".Activities.LoginInternetAccessActivity"></activity>
         <activity android:name=".Activities.PreferencesActivity" />
-        <activity android:name=".UsersPreferencesActivity" />
         <activity android:name=".Activities.UsersInfoActivity" />
         <activity android:name=".Activities.LogInActivity" />
         <activity android:name=".Activities.RegistrationActivity" />
