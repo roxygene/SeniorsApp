@@ -4,19 +4,26 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.roksanagulewska.seniorsapp.Activities.StartingActivity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static android.content.ContentValues.TAG;
 
@@ -25,37 +32,44 @@ public class DataBaseHelper {
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = db.getReference();
     private String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private DatabaseReference userReference = databaseReference.child("Users");
+    List<String> returnedList = new ArrayList<>();
 
-    public Task<Void> addUserToDB(User user) {
-       return databaseReference.child("Users").child(currentUserId).setValue(user);
+    public DataBaseHelper() {
     }
 
-    public ArrayList<String> getAllUsersId() {
-        DatabaseReference userReference = databaseReference.child("Users");
-        ArrayList<String> listaId = new ArrayList<String>();
+    public Task<Void> addUserToDB(User user) {
+        return databaseReference.child("Users").child(currentUserId).setValue(user);
+    }
 
-        userReference.addValueEventListener(new ValueEventListener() {
 
+    public void addAllUsersIdToList() {
+        Log.d("LISTENER", "Przed add valueEventListener");
+
+        userReference.addValueEventListener(new ValueEventListener() { //do poprawy
             /**
              * This method will be called with a snapshot of the data at this location. It will also be called
              * each time that data changes.
              *
              * @param dataSnapshot The current data at the location
-             */
+             * */
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-
-                    /*User user = snapshot.getValue(User.class);
-                    String txt = user.getName();
-                    listaId.add(txt);
-
-                     */
-                    //listaId.add(snapshot.getChildren().toString());
-
+                returnedList.clear();
+                Log.d("LISTENER", "W onDataChange");
+                Log.d("LISTENER", "Wchodzi do onDataChange");
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    String id = user.getUserId();
+                    returnedList.add(id);
+                    Log.d("ID_USERA", id);
+                    Log.d("LISTENER", "w  małej pętli");
                 }
-
+                //returnedList = list;
+                Log.d("LISTENER", "Wyszedł z małej pętli");
+                //Log.d("LISTENER", "Rozmiar list " + list.size());
+                Log.d("LISTENER", "Rozmiar returnedList: " + returnedList.size());
+                StartingActivity.metodaX(returnedList);
             }
 
             /**
@@ -69,11 +83,41 @@ public class DataBaseHelper {
              */
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.w("READ_ERROR", "Failed to read value.", error.toException());
             }
         });
-        return listaId;
+
     }
+
+    /*
+    public ArrayList<String> addAllUsersIdToList1() {
+
+    }
+
+     */
+
+    /*
+            Log.d("LISTENER", "przed końcem dużej pętli przed return");
+            if (returnedList.size() > 1) {
+                Log.d("LISTENER", "return");
+                return returnedList;
+            }
+
+             */
+
+    /*
+    public void generateAllUsersIdList(ArrayList<String> list) {
+        StringBuilder sb = new StringBuilder();
+        for (String id : list)
+        {
+            sb.append(id + " ");
+        }
+        String idList = sb.toString();
+        Log.d("ID_LISTA", idList);
+    }
+
+     */
+
 
 
     /*
@@ -160,7 +204,6 @@ public class DataBaseHelper {
         return databaseReference.child("User").child(userId).removeValue();
     }
      */
-
 
 
 }

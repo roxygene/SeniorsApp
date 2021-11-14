@@ -57,30 +57,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             navigationView.setCheckedItem(R.id.nav_find_friends);
         }
 
-        /*
-        //próby z bazą danych
-        rootNode = FirebaseDatabase.getInstance();
-        reference = rootNode.getReference("Users");//robi referencje do Users z bazy danych
 
-        //reference.setValue("jakać wartość którą chcemy nadać Users");
-        Query usersId = reference.orderByChild(user.getUserId());
-        String usersIdS = reference.getKey();
-
-
-
-         */
-
-        //Toast.makeText(getApplicationContext(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
-        StringBuilder sb = new StringBuilder();
-        ArrayList<String> list = dbHelper.getAllUsersId();
-
-        for (String id : list)
-        {
-            sb.append(id);
-            sb.append(", ");
-        }
-        String text = "coś: " + sb.toString();
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
     @Override
