@@ -130,6 +130,7 @@ public class FindNewFriendsFragment extends Fragment {
                     Toast.makeText(getContext(), "Direction Right", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "Like", Toast.LENGTH_SHORT).show();
 
+
                 }
                 if (direction == Direction.Top){
                     Toast.makeText(getContext(), "Direction Top", Toast.LENGTH_SHORT).show();
@@ -208,7 +209,7 @@ public class FindNewFriendsFragment extends Fragment {
         Log.d("PREF", "ListaMatches: " + potentialMatchesList.size());
 
         for (User potentialMatch : potentialMatchesList) {
-            items.add(new ItemModel(R.drawable.sample1, potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), "descriptionABC"));
+            items.add(new ItemModel(R.drawable.sample1, potentialMatch.getUserId(), potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), "descriptionABC"));
         }
 
         Log.d("PREF", "ListaItem: " + items.size());

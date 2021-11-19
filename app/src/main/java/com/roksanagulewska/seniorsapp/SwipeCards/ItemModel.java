@@ -6,13 +6,15 @@ public class ItemModel {
     private int age;
     private String localisation;
     private String description;
+    private String userId;
 
 
     public ItemModel() {
     }
 
-    public ItemModel(int image, String name, int age, String localisation, String description) {
+    public ItemModel(int image, String userId, String name, int age, String localisation, String description) {
         this.image = image;
+        this.userId = userId;
         this.name = name;
         this.age = age;
         this.localisation = localisation;
@@ -25,6 +27,14 @@ public class ItemModel {
 
     public void setImage(int image) {
         this.image = image;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {
