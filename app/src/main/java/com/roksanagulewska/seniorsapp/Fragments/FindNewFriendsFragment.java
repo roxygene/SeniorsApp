@@ -49,6 +49,7 @@ public class FindNewFriendsFragment extends Fragment {
     int maxPrefAge;
     String prefferedSex;
     List<User> potentialMatchesList = new ArrayList<>();
+    List<ItemModel> items = new ArrayList<>();
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -98,50 +99,6 @@ public class FindNewFriendsFragment extends Fragment {
         /*checkUsersPreferences();
         listPotentialMatches();*/
 
-
-
-        /*
-        userReference.addValueEventListener(new ValueEventListener() { //do poprawy
-            /**
-             * This method will be called with a snapshot of the data at this location. It will also be called
-             * each time that data changes.
-             *
-             * @param dataSnapshot The current data at the location
-             *
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            returnedList.clear();
-            Log.d("LISTENER", "W onDataChange");
-            Log.d("LISTENER", "Wchodzi do onDataChange");
-            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                User user = snapshot.getValue(User.class);
-                String id = user.getUserId();
-                returnedList.add(id);
-                Log.d("ID_USERA", id);
-                Log.d("LISTENER", "w  małej pętli");
-            }
-            //returnedList = list;
-            Log.d("LISTENER", "Wyszedł z małej pętli");
-            //Log.d("LISTENER", "Rozmiar list " + list.size());
-            Log.d("LISTENER", "Rozmiar returnedList: " + returnedList.size());
-            StartingActivity.metodaX(returnedList);
-        }
-
-        /**
-         * This method will be triggered in the event that this listener either failed at the server, or
-         * is removed as a result of the security and Firebase Database rules. For more information on
-         * securing your data, see: <a
-         * href="https://firebase.google.com/docs/database/security/quickstart" target="_blank"> Security
-         * Quickstart</a>
-         *
-         * @param error A description of the error that occurred
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-            Log.w("READ_ERROR", "Failed to read value.", error.toException());
-        }
-    });
-         */
     }
 
     @Override
@@ -156,9 +113,6 @@ public class FindNewFriendsFragment extends Fragment {
     }
 
     private void init(View root) {
-        checkUsersPreferences();
-        listPotentialMatches();
-
         CardStackView cardStackView = root.findViewById(R.id.card_stack_view);
         manager = new CardStackLayoutManager(getContext(), new CardStackListener() {
             @Override
@@ -221,30 +175,35 @@ public class FindNewFriendsFragment extends Fragment {
         manager.setCanScrollHorizontal(true);
         manager.setSwipeableMethod(SwipeableMethod.Manual);
         manager.setOverlayInterpolator(new LinearInterpolator());
-        adapter = new CardStackAdapter(addList());
+        //adapter = new CardStackAdapter(addList());
+        adapter = new CardStackAdapter(items);
         cardStackView.setLayoutManager(manager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
+
+        checkUsersPreferences();
+        listPotentialMatches();
+
     }
 
     private void paginate() {
         List<ItemModel> oldCard = adapter.getItems();
-        List<ItemModel> newCard = new ArrayList<>(addList());
+        List<ItemModel> newCard = new ArrayList<>(items);
         CardStackCallback callback = new CardStackCallback(oldCard, newCard);
         DiffUtil.DiffResult results = DiffUtil.calculateDiff(callback);
         adapter.setItems(newCard);
         results.dispatchUpdatesTo(adapter);
     }
 
-    private List<ItemModel> addList() {
-        List<ItemModel> items = new ArrayList<>();
-        Log.d("PREF", "ListaItem: " + items.size());
+    private void addList() {
+
         Log.d("PREF", "ListaMatches: " + potentialMatchesList.size());
 
         for (User potentialMatch : potentialMatchesList) {
             items.add(new ItemModel(R.drawable.sample1, potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), "descriptionABC"));
         }
-        return items;
+
+        Log.d("PREF", "ListaItem: " + items.size());
     }
 
     public void checkUsersPreferences() {
@@ -258,7 +217,6 @@ public class FindNewFriendsFragment extends Fragment {
                 Log.d("PREF", "SEX: " + prefferedSex);
                 Log.d("PREF", "MINage: " + minPrefAge);
                 Log.d("PREF", "MAXage: " + maxPrefAge);
-
 
             }
 
@@ -296,6 +254,9 @@ public class FindNewFriendsFragment extends Fragment {
                 for (User element : potentialMatchesList) {
                     Log.d("PREF_USER", element.getEmail());
                 }
+
+                addList();
+                adapter.notifyDataSetChanged();
             }
 
             @Override
