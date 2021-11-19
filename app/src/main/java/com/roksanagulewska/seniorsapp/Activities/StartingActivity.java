@@ -48,6 +48,8 @@ public class StartingActivity extends AppCompatActivity {
         finish();
     }
 
+    /*
+
     public static void metodaX(List<String> list) {
         Log.d("LISTENER", "Size lista rzeźbionaX: " + list.size());
 
@@ -63,4 +65,6 @@ public class StartingActivity extends AppCompatActivity {
         Log.d("LISTENER", "Size lista rzeźbionaY: " + list.size());
 
     }
+
+     */
 }

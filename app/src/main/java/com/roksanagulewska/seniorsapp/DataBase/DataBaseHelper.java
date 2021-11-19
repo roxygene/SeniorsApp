@@ -32,8 +32,9 @@ public class DataBaseHelper {
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = db.getReference();
     private String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    private DatabaseReference userReference = databaseReference.child("Users");
-    List<String> returnedList = new ArrayList<>();
+    private DatabaseReference currentUserReference = databaseReference.child("Users").child(getCurrentUserId());
+
+    private List<String> returnedList = new ArrayList<>(); //get i set
 
     public DataBaseHelper() {
     }
@@ -46,7 +47,7 @@ public class DataBaseHelper {
     public void addAllUsersIdToList() {
         Log.d("LISTENER", "Przed add valueEventListener");
 
-        userReference.addValueEventListener(new ValueEventListener() { //do poprawy
+        databaseReference.child("Users").addValueEventListener(new ValueEventListener() { //do poprawy
             /**
              * This method will be called with a snapshot of the data at this location. It will also be called
              * each time that data changes.
@@ -69,7 +70,7 @@ public class DataBaseHelper {
                 Log.d("LISTENER", "Wyszedł z małej pętli");
                 //Log.d("LISTENER", "Rozmiar list " + list.size());
                 Log.d("LISTENER", "Rozmiar returnedList: " + returnedList.size());
-                StartingActivity.metodaX(returnedList);
+                //StartingActivity.metodaX(returnedList);
             }
 
             /**
@@ -205,5 +206,43 @@ public class DataBaseHelper {
     }
      */
 
+    public FirebaseDatabase getDb() {
+        return db;
+    }
 
+    public void setDb(FirebaseDatabase db) {
+        this.db = db;
+    }
+
+    public DatabaseReference getDatabaseReference() {
+        return databaseReference;
+    }
+
+    public void setDatabaseReference(DatabaseReference databaseReference) {
+        this.databaseReference = databaseReference;
+    }
+
+    public String getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(String currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+
+    public DatabaseReference getCurrentUserReference() {
+        return currentUserReference;
+    }
+
+    public void setCurrentUserReference(DatabaseReference currentUserReference) {
+        this.currentUserReference = currentUserReference;
+    }
+
+    public List<String> getReturnedList() {
+        return returnedList;
+    }
+
+    public void setReturnedList(List<String> returnedList) {
+        this.returnedList = returnedList;
+    }
 }

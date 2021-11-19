@@ -94,6 +94,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
     }
 
+    //wylogowywanie
     public void logOut() {
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,7 @@
 package com.roksanagulewska.seniorsapp.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,12 +55,15 @@ public class MyProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Log.d("MYPROF", "my profileOnCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.d("MYPROF", "my profileONCRV");
         return inflater.inflate(R.layout.fragment_my_profile, container, false);
     }
 }

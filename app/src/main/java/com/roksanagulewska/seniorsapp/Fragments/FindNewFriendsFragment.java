@@ -9,10 +9,19 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.roksanagulewska.seniorsapp.Activities.StartingActivity;
+import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
+import com.roksanagulewska.seniorsapp.DataBase.User;
 import com.roksanagulewska.seniorsapp.R;
 import com.roksanagulewska.seniorsapp.SwipeCards.CardStackAdapter;
 import com.roksanagulewska.seniorsapp.SwipeCards.CardStackCallback;
@@ -35,6 +44,13 @@ import java.util.List;
  */
 public class FindNewFriendsFragment extends Fragment {
 
+    DataBaseHelper dbHelper = new DataBaseHelper();
+    int minPrefAge;
+    int maxPrefAge;
+    String prefferedSex;
+    List<User> potentialMatchesList = new ArrayList<>();
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -43,6 +59,7 @@ public class FindNewFriendsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    //zadeklarować i inicjalizować pole klasy databaseHelper
 
     private static final String TAG = FindNewFriendsFragment.class.getSimpleName();
     private CardStackLayoutManager manager;
@@ -78,6 +95,53 @@ public class FindNewFriendsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        /*checkUsersPreferences();
+        listPotentialMatches();*/
+
+
+
+        /*
+        userReference.addValueEventListener(new ValueEventListener() { //do poprawy
+            /**
+             * This method will be called with a snapshot of the data at this location. It will also be called
+             * each time that data changes.
+             *
+             * @param dataSnapshot The current data at the location
+             *
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            returnedList.clear();
+            Log.d("LISTENER", "W onDataChange");
+            Log.d("LISTENER", "Wchodzi do onDataChange");
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                User user = snapshot.getValue(User.class);
+                String id = user.getUserId();
+                returnedList.add(id);
+                Log.d("ID_USERA", id);
+                Log.d("LISTENER", "w  małej pętli");
+            }
+            //returnedList = list;
+            Log.d("LISTENER", "Wyszedł z małej pętli");
+            //Log.d("LISTENER", "Rozmiar list " + list.size());
+            Log.d("LISTENER", "Rozmiar returnedList: " + returnedList.size());
+            StartingActivity.metodaX(returnedList);
+        }
+
+        /**
+         * This method will be triggered in the event that this listener either failed at the server, or
+         * is removed as a result of the security and Firebase Database rules. For more information on
+         * securing your data, see: <a
+         * href="https://firebase.google.com/docs/database/security/quickstart" target="_blank"> Security
+         * Quickstart</a>
+         *
+         * @param error A description of the error that occurred
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Log.w("READ_ERROR", "Failed to read value.", error.toException());
+        }
+    });
+         */
     }
 
     @Override
@@ -92,6 +156,9 @@ public class FindNewFriendsFragment extends Fragment {
     }
 
     private void init(View root) {
+        checkUsersPreferences();
+        listPotentialMatches();
+
         CardStackView cardStackView = root.findViewById(R.id.card_stack_view);
         manager = new CardStackLayoutManager(getContext(), new CardStackListener() {
             @Override
@@ -161,27 +228,83 @@ public class FindNewFriendsFragment extends Fragment {
     }
 
     private void paginate() {
-        List<ItemModel> old = adapter.getItems();
-        List<ItemModel> baru = new ArrayList<>(addList());
-        CardStackCallback callback = new CardStackCallback(old, baru);
-        DiffUtil.DiffResult hasil = DiffUtil.calculateDiff(callback);
-        adapter.setItems(baru);
-        hasil.dispatchUpdatesTo(adapter);
+        List<ItemModel> oldCard = adapter.getItems();
+        List<ItemModel> newCard = new ArrayList<>(addList());
+        CardStackCallback callback = new CardStackCallback(oldCard, newCard);
+        DiffUtil.DiffResult results = DiffUtil.calculateDiff(callback);
+        adapter.setItems(newCard);
+        results.dispatchUpdatesTo(adapter);
     }
 
     private List<ItemModel> addList() {
         List<ItemModel> items = new ArrayList<>();
-        items.add(new ItemModel(R.drawable.sample1, "Markonah", "24", "Jember"));
-        items.add(new ItemModel(R.drawable.sample2, "Marpuah", "20", "Malang"));
-        items.add(new ItemModel(R.drawable.sample3, "Sukijah", "27", "Jonggol"));
-        items.add(new ItemModel(R.drawable.sample4, "Markobar", "19", "Bandung"));
-        items.add(new ItemModel(R.drawable.sample5, "Marmut", "25", "Hutan"));
+        Log.d("PREF", "ListaItem: " + items.size());
+        Log.d("PREF", "ListaMatches: " + potentialMatchesList.size());
 
-        items.add(new ItemModel(R.drawable.sample1, "Markonah", "24", "Jember"));
-        items.add(new ItemModel(R.drawable.sample2, "Marpuah", "20", "Malang"));
-        items.add(new ItemModel(R.drawable.sample3, "Sukijah", "27", "Jonggol"));
-        items.add(new ItemModel(R.drawable.sample4, "Markobar", "19", "Bandung"));
-        items.add(new ItemModel(R.drawable.sample5, "Marmut", "25", "Hutan"));
+        for (User potentialMatch : potentialMatchesList) {
+            items.add(new ItemModel(R.drawable.sample1, potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), "descriptionABC"));
+        }
         return items;
+    }
+
+    public void checkUsersPreferences() {
+        ValueEventListener checkPreferencesValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                prefferedSex = dataSnapshot.child("preferredSex").getValue().toString();
+                minPrefAge = Integer.parseInt(dataSnapshot.child("minPrefAge").getValue().toString());
+                maxPrefAge = Integer.parseInt(dataSnapshot.child("maxPrefAge").getValue().toString());
+
+                Log.d("PREF", "SEX: " + prefferedSex);
+                Log.d("PREF", "MINage: " + minPrefAge);
+                Log.d("PREF", "MAXage: " + maxPrefAge);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("READ_PREFERENCES_ERROR", "Failed to read preferences values.", error.toException());
+            }
+        };
+
+        dbHelper.getCurrentUserReference().addValueEventListener(checkPreferencesValueEventListener);
+
+    }
+
+    public void listPotentialMatches() {
+        ValueEventListener listPotentialMatchesValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    Log.d("PREF", "sexP" + prefferedSex);
+                    Log.d("PREF", "sexUS " + user.getSex());
+                    Log.d("PREF", "ageUS" + user.getAge());
+
+                    if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
+                        if (user.getAge() <= maxPrefAge && user.getAge() >= minPrefAge) {
+                            if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {
+                                potentialMatchesList.add(user);
+                            }
+                        }
+                    }
+
+                    Log.d("PREF", "jestem w pętli" + user.getEmail());
+                }
+
+                for (User element : potentialMatchesList) {
+                    Log.d("PREF_USER", element.getEmail());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("READ_POTENTIAL_MATCHES_ERROR", "Failed to read values.", error.toException());
+            }
+        };
+
+        dbHelper.getDatabaseReference().child("Users").addValueEventListener(listPotentialMatchesValueEventListener);
+
     }
 }
