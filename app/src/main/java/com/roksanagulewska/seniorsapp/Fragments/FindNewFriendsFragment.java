@@ -34,7 +34,9 @@ import com.yuyakaido.android.cardstackview.StackFrom;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -50,6 +52,7 @@ public class FindNewFriendsFragment extends Fragment {
     String prefferedSex;
     List<User> potentialMatchesList = new ArrayList<>();
     List<ItemModel> items = new ArrayList<>();
+    boolean isFirstTime = true;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -130,7 +133,11 @@ public class FindNewFriendsFragment extends Fragment {
                     Toast.makeText(getContext(), "Direction Right", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "Like", Toast.LENGTH_SHORT).show();
 
-
+                    String test = items.get(0).getUserId();
+                    Log.d("TEEEST", "user ID: " + test);
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put(test, "yes");
+                    dbHelper.getCurrentUserReference().child("Connections").updateChildren(map);
                 }
                 if (direction == Direction.Top){
                     Toast.makeText(getContext(), "Direction Top", Toast.LENGTH_SHORT).show();
@@ -149,6 +156,8 @@ public class FindNewFriendsFragment extends Fragment {
                 if (manager.getTopPosition() == adapter.getItemCount() - 5){
                     paginate();
                 }
+
+                items.remove(0);
 
             }
 
@@ -192,6 +201,7 @@ public class FindNewFriendsFragment extends Fragment {
 
         checkUsersPreferences();
         listPotentialMatches();
+        //dbHelper.addPotentialMatchesToDb(potentialMatchesList);
 
     }
 
@@ -250,13 +260,14 @@ public class FindNewFriendsFragment extends Fragment {
                     Log.d("PREF", "sexUS " + user.getSex());
                     Log.d("PREF", "ageUS" + user.getAge());
 
-                    if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
-                        if (user.getAge() <= maxPrefAge && user.getAge() >= minPrefAge) {
-                            if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {
-                                potentialMatchesList.add(user);
+                        if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
+                            if (user.getAge() <= maxPrefAge && user.getAge() >= minPrefAge) {
+                                if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {
+                                    potentialMatchesList.add(user);
+                                }
                             }
                         }
-                    }
+
 
                     Log.d("PREF", "jestem w pętli" + user.getEmail());
                 }
@@ -264,10 +275,16 @@ public class FindNewFriendsFragment extends Fragment {
                 for (User element : potentialMatchesList) {
                     Log.d("PREF_USER", element.getEmail());
                 }
+                
+                //potentialMatchesList.forEach((element) -> Log.d("PREF_USER", element.getEmail())); do notatek
+
+                if (isFirstTime) {
+                    dbHelper.addPotentialMatchesToDb(potentialMatchesList);
+                    isFirstTime = false;
+                }
 
                 addList();
                 adapter.notifyDataSetChanged();
-                dbHelper.addPotentialMatchesToDb(potentialMatchesList);
             }
 
             @Override
