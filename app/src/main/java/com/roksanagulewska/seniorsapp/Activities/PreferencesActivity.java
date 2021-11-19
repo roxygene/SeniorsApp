@@ -66,8 +66,8 @@ public class PreferencesActivity extends AppCompatActivity {
                         preferredSex = "males";
                     }
 
-                    String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    user = new User(currentUserId, email, password, name, age, sex, localisation, preferredSex, null, null, minAge, maxAge);
+                    //String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, null, null, minAge, maxAge);
                     dbHelper.addUserToDB(user).addOnSuccessListener(success->
                     {
                         Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();

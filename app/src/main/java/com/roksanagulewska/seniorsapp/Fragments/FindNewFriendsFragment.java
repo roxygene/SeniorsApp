@@ -99,6 +99,9 @@ public class FindNewFriendsFragment extends Fragment {
         /*checkUsersPreferences();
         listPotentialMatches();*/
 
+        //dbHelper.getCurrentUserReference().child("Connections1");
+        //dbHelper.getDatabaseReference().child("testowy1");
+
     }
 
     @Override
@@ -125,15 +128,20 @@ public class FindNewFriendsFragment extends Fragment {
                 Log.d(TAG, "onCardSwiped: p=" + manager.getTopPosition() + " d=" + direction);
                 if (direction == Direction.Right){
                     Toast.makeText(getContext(), "Direction Right", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Like", Toast.LENGTH_SHORT).show();
+
                 }
                 if (direction == Direction.Top){
                     Toast.makeText(getContext(), "Direction Top", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "More", Toast.LENGTH_SHORT).show();
                 }
                 if (direction == Direction.Left){
                     Toast.makeText(getContext(), "Direction Left", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Dislike", Toast.LENGTH_SHORT).show();
                 }
                 if (direction == Direction.Bottom){
                     Toast.makeText(getContext(), "Direction Bottom", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "More", Toast.LENGTH_SHORT).show();
                 }
 
                 // Paginating
@@ -156,13 +164,13 @@ public class FindNewFriendsFragment extends Fragment {
             @Override
             public void onCardAppeared(View view, int position) {
                 TextView tv = view.findViewById(R.id.item_name);
-                Log.d(TAG, "onCardAppeared: " + position + ", nama: " + tv.getText());
+                Log.d(TAG, "onCardAppeared: " + position + ", name: " + tv.getText());
             }
 
             @Override
             public void onCardDisappeared(View view, int position) {
                 TextView tv = view.findViewById(R.id.item_name);
-                Log.d(TAG, "onCardAppeared: " + position + ", nama: " + tv.getText());
+                Log.d(TAG, "onCardAppeared: " + position + ", name: " + tv.getText());
             }
         });
         manager.setStackFrom(StackFrom.None);
@@ -204,6 +212,7 @@ public class FindNewFriendsFragment extends Fragment {
         }
 
         Log.d("PREF", "ListaItem: " + items.size());
+
     }
 
     public void checkUsersPreferences() {
@@ -257,6 +266,7 @@ public class FindNewFriendsFragment extends Fragment {
 
                 addList();
                 adapter.notifyDataSetChanged();
+                dbHelper.addPotentialMatchesToDb(potentialMatchesList);
             }
 
             @Override

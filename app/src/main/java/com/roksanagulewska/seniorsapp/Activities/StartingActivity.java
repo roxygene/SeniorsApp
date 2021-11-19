@@ -31,9 +31,6 @@ public class StartingActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginBtn);
         registerButton = findViewById(R.id.registerBtn);
 
-
-        dbHelper.addAllUsersIdToList();
-
     }
 
     public void goToLogInOnClick(View view) {
@@ -48,23 +45,4 @@ public class StartingActivity extends AppCompatActivity {
         finish();
     }
 
-    /*
-
-    public static void metodaX(List<String> list) {
-        Log.d("LISTENER", "Size lista rzeźbionaX: " + list.size());
-
-        //filtracja par
-        metodaYadapter(list);
-
-
-
-    }
-
-    public static void metodaYadapter(List<String> list) {
-        //logika przekazania listy do adaptera
-        Log.d("LISTENER", "Size lista rzeźbionaY: " + list.size());
-
-    }
-
-     */
 }
