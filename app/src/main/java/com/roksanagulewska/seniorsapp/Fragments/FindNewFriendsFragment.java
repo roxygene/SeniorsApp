@@ -129,7 +129,7 @@ public class FindNewFriendsFragment extends Fragment {
             @Override
             public void onCardSwiped(Direction direction) {
                 Log.d(TAG, "onCardSwiped: p=" + manager.getTopPosition() + " d=" + direction);
-                items.remove(0);//kiedy karta została przesunięta usuń ją ze stosu
+
                 if (direction == Direction.Right){
                     //Toast.makeText(getContext(), "Direction Right", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "Like", Toast.LENGTH_SHORT).show();
@@ -158,6 +158,8 @@ public class FindNewFriendsFragment extends Fragment {
                     //Toast.makeText(getContext(), "Direction Bottom", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "More", Toast.LENGTH_SHORT).show();
                 }*/
+
+                items.remove(0);//kiedy karta została przesunięta usuń ją ze stosu
 
                 // Paginating
                 if (manager.getTopPosition() == adapter.getItemCount() - 5){
