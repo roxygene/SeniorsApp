@@ -52,7 +52,7 @@ public class FindNewFriendsFragment extends Fragment {
     String prefferedSex;
     List<User> potentialMatchesList = new ArrayList<>();
     List<ItemModel> items = new ArrayList<>();
-    boolean isFirstTime = true;
+    boolean isFirstTime = true; //flaga sprawdzająca czy addMatchesToDb zostało wykonane
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -129,36 +129,40 @@ public class FindNewFriendsFragment extends Fragment {
             @Override
             public void onCardSwiped(Direction direction) {
                 Log.d(TAG, "onCardSwiped: p=" + manager.getTopPosition() + " d=" + direction);
+                items.remove(0);//kiedy karta została przesunięta usuń ją ze stosu
                 if (direction == Direction.Right){
-                    Toast.makeText(getContext(), "Direction Right", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Direction Right", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "Like", Toast.LENGTH_SHORT).show();
 
-                    String test = items.get(0).getUserId();
-                    Log.d("TEEEST", "user ID: " + test);
+                    //zmiana statusu relacji użytkownika
+                    String cardUser = items.get(0).getUserId();
+                    Log.d("TEEEST", "user ID: " + cardUser);
                     Map<String, Object> map = new HashMap<String, Object>();
-                    map.put(test, "yes");
-                    dbHelper.getCurrentUserReference().child("Connections").updateChildren(map);
+                    map.put("Seen", "yes");
+                    map.put("Liked", "yes");
+                    dbHelper.getCurrentUserReference().child("Connections").child(cardUser).updateChildren(map);
                 }
-                if (direction == Direction.Top){
-                    Toast.makeText(getContext(), "Direction Top", Toast.LENGTH_SHORT).show();
+                /*if (direction == Direction.Top){
+                    //Toast.makeText(getContext(), "Direction Top", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "More", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 if (direction == Direction.Left){
-                    Toast.makeText(getContext(), "Direction Left", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Direction Left", Toast.LENGTH_SHORT).show();
+                    String cardUser = items.get(0).getUserId();
                     Toast.makeText(getContext(), "Dislike", Toast.LENGTH_SHORT).show();
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("Seen", "yes");
+                    dbHelper.getCurrentUserReference().child("Connections").child(cardUser).updateChildren(map);
                 }
-                if (direction == Direction.Bottom){
-                    Toast.makeText(getContext(), "Direction Bottom", Toast.LENGTH_SHORT).show();
+                /*if (direction == Direction.Bottom){
+                    //Toast.makeText(getContext(), "Direction Bottom", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "More", Toast.LENGTH_SHORT).show();
-                }
+                }*/
 
                 // Paginating
                 if (manager.getTopPosition() == adapter.getItemCount() - 5){
                     paginate();
                 }
-
-                items.remove(0);
-
             }
 
             @Override
@@ -215,14 +219,14 @@ public class FindNewFriendsFragment extends Fragment {
     }
 
     private void addList() {
-
-        Log.d("PREF", "ListaMatches: " + potentialMatchesList.size());
+        items.clear();
+        Log.d("PREFL", "ListaMatches: " + potentialMatchesList.size());
 
         for (User potentialMatch : potentialMatchesList) {
             items.add(new ItemModel(R.drawable.sample1, potentialMatch.getUserId(), potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), "descriptionABC"));
         }
 
-        Log.d("PREF", "ListaItem: " + items.size());
+        Log.d("PREFL", "ListaItem: " + items.size());
 
     }
 
@@ -251,6 +255,7 @@ public class FindNewFriendsFragment extends Fragment {
     }
 
     public void listPotentialMatches() {
+        potentialMatchesList.clear();
         ValueEventListener listPotentialMatchesValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -261,9 +266,14 @@ public class FindNewFriendsFragment extends Fragment {
                     Log.d("PREF", "ageUS" + user.getAge());
 
                         if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
-                            if (user.getAge() <= maxPrefAge && user.getAge() >= minPrefAge) {
-                                if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {
-                                    potentialMatchesList.add(user);
+                            if (user.getAge() <= maxPrefAge && user.getAge() >= minPrefAge) { //sprawdzenie dopasowania wieku
+                                if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {//sprawdzenie czy użytkownik nie będzie wyświetlał sam siebie
+                                    if(dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").hasChild(user.getUserId())) { //sprawdzenie czyistnieje już taka pozycja w tabeli connections, aby nie nadpisywać danych
+                                        Log.d("OMG", "yes " + user.getUserId());
+                                    } else {
+                                        Log.d("OMG", "no " + user.getUserId());
+                                        potentialMatchesList.add(user);
+                                    }
                                 }
                             }
                         }
@@ -280,10 +290,9 @@ public class FindNewFriendsFragment extends Fragment {
 
                 if (isFirstTime) {
                     dbHelper.addPotentialMatchesToDb(potentialMatchesList);
+                    addList();
                     isFirstTime = false;
                 }
-
-                addList();
                 adapter.notifyDataSetChanged();
             }
 
