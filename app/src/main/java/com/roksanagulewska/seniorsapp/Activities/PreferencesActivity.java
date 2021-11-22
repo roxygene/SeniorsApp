@@ -76,7 +76,7 @@ public class PreferencesActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
                     });
 
-                    Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), ProfileInfoActivity.class);
                     startActivity(intent);
                     finish();
                 }

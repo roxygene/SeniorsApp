@@ -28,8 +28,12 @@
     <string name="internetL2">"No Internet Connection! You can't sign in!"</string>
     <string name="internetR2">"No Internet Connection! You can't sign up!"</string>
     <string name="internet3">Try Again</string>
-
-
+    <string name="profile_info1">Choose main picture</string>
+    <string name="profile_info2">take a picture</string>
+    <string name="profile_info3">choose from gallery</string>
+    <string name="profile_info4">About me</string>
+    <string name="profile_info5">Write here your short description.</string>
+    <string name="profile_info6">Show upload</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- TODO: Remove or change this placeholder text -->
