@@ -3,11 +3,20 @@ package com.roksanagulewska.seniorsapp.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
@@ -27,25 +36,35 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.DataBase.UploadImage;
+import com.roksanagulewska.seniorsapp.DataBase.User;
 import com.roksanagulewska.seniorsapp.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ProfileInfoActivity extends AppCompatActivity {
 
-    public static final int GALLERY_INTENT_CODE = 1;
-    public static final int CAMERA_INTENT_CODE = 2;
-    public static final int CAMERA_PERMISSION_CODE = 100;
+    public static final int CAMERA_INTENT_CODE = 99;
+    public static final int CAMERA_ANG_GALLERY_PERMISSION_CODE = 100;
+    public static final int GALLERY_INTENT_CODE = 101;
 
-    private static final int PICK_IMAGE_REQUEST = 3;
+
     private Uri imageUri;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
+    DataBaseHelper dbHelper = new DataBaseHelper();
+    User user;
+    String currentPhotoPath;
 
     ImageView mainPicture;
     Button cameraBtn, galleryBtn, confirmBtn;
     EditText descriptionEditTxt;
-    ProgressBar progressBar;
+    String whichButtonClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +74,143 @@ public class ProfileInfoActivity extends AppCompatActivity {
         mainPicture = findViewById(R.id.mainPictureImageView);
         cameraBtn = findViewById(R.id.cameraButton);
         galleryBtn = findViewById(R.id.galleryButton);
-        confirmBtn = findViewById(R.id.confirmInfoButton);
+        confirmBtn = findViewById(R.id.confirmButton);
         descriptionEditTxt = findViewById(R.id.descriptionEditText);
-        progressBar = findViewById(R.id.progress_bar);
 
+        Intent prefIntent = getIntent(); //intencja która wywołała tą aktywność
+        Bundle prefBundle = prefIntent.getExtras(); // przypisanie bundla który przyszedł z intencją
+        String email = prefBundle.getString("email");
+        String password = prefBundle.getString("password");
+        String name = prefBundle.getString("name");
+        String localisation = prefBundle.getString("localisation");
+        int age = prefBundle.getInt("age");
+        String sex = prefBundle.getString("sex");
+        String preferredSex = prefBundle.getString("prefferedSex");
+        int minAge = prefBundle.getInt("minAge");
+        int maxAge = prefBundle.getInt("maxAge");
+
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichButtonClicked = "camera";
+                askCameraPermission();
+            }
+        });
+
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichButtonClicked = "gallery";
+                askCameraPermission();
+            }
+
+            }
+        });
+
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    //zapytanie o pozwolenie na dostęp do aparatu
+    private void askCameraPermission() {
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_ANG_GALLERY_PERMISSION_CODE);
+        } else {
+            //if (whichButtonClicked == "camera")
+                openCamera();
+//            else if (whichButtonClicked == "gallery") {
+//                dispatchTakePictureIntent();
+//            }
+        }
+    }
+
+    //sprawdzenie pozwolenia
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CAMERA_ANG_GALLERY_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (whichButtonClicked == "camera")
+                    openCamera();
+                else if (whichButtonClicked == "gallery") {
+                    dispatchTakePictureIntent();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Camera Permission is Required.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void openCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_INTENT_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CAMERA_INTENT_CODE) {
+            Bitmap bitmap =  (Bitmap) data.getExtras().get("data");
+            mainPicture.setImageBitmap(bitmap);
+        } else if (requestCode == GALLERY_INTENT_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+            File file = new File(currentPhotoPath);
+            mainPicture.setImageURI(Uri.fromFile(file));
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_INTENT_CODE);
+            }
+        }
+    }
+
+    /*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            mainPicture.setImageBitmap(bitmap);
+        }
+    }
+
+     */
+
+    /*
         storageReference = FirebaseStorage.getInstance().getReference("Images");
         databaseReference = FirebaseDatabase.getInstance().getReference("Images");
 
@@ -67,12 +219,29 @@ public class ProfileInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 uploadImage();
-                
+
+                String description = descriptionEditTxt.getText().toString().trim();
+
+                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, null, minAge, maxAge);
+                dbHelper.addUserToDB(user).addOnSuccessListener(success->
+                {
+                    Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(error->
+                {
+                    Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                });
 
 
-
-                Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
-                startActivity(intent);
+                Intent pInfoIntent = new Intent(getApplicationContext(), NavigationActivity.class);
+                Bundle pInfoBundle = new Bundle();
+                pInfoBundle.putString("email", email);
+                pInfoBundle.putString("password", password);
+                pInfoBundle.putString("name", name);
+                pInfoBundle.putString("localisation", localisation);
+                pInfoBundle.putInt("age", age);
+                pInfoBundle.putString("sex", sex);
+                pInfoIntent.putExtras(pInfoBundle);
+                startActivity(pInfoIntent);
                 finish();
 
             }
@@ -107,17 +276,6 @@ public class ProfileInfoActivity extends AppCompatActivity {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
 
-                                /**
-                                 * When an object implementing interface <code>Runnable</code> is used
-                                 * to create a thread, starting the thread causes the object's
-                                 * <code>run</code> method to be called in that separately executing
-                                 * thread.
-                                 * <p>
-                                 * The general contract of the method <code>run</code> is that it may
-                                 * take any action whatsoever.
-                                 *
-                                 * @see Thread#run()
-                                 */
                                 @Override
                                 public void run() {
                                     progressBar.setProgress(0);
@@ -170,7 +328,8 @@ public class ProfileInfoActivity extends AppCompatActivity {
             imageUri = data.getData();
 
             Picasso.get().load(imageUri).into(mainPicture);
-                    //(this).load(imageUri).into(mainPicture);
+
         }
     }
+    */
 }

@@ -53,7 +53,6 @@ public class DataBaseHelper {
         }
 
 
-
         /*Log.d("DBMAT", "Jestem w appPot");
         HashMap<String, Object> matchesMap = new HashMap<>();
         for (User element : potentialMatchesList) {

@@ -18,7 +18,7 @@ public class UsersInfoActivity extends AppCompatActivity {
     EditText ageEditTxt;
     SwitchCompat sexSwitch;
     Button confirmInfoBtn;
-    String sex;
+    String sex = "female";
     int age = 0;
 
 

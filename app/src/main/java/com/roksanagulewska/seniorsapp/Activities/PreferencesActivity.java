@@ -24,8 +24,7 @@ public class PreferencesActivity extends AppCompatActivity {
     int maxAge = 0;
     String preferredSex;
 
-    User user;
-    DataBaseHelper dbHelper = new DataBaseHelper();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +52,7 @@ public class PreferencesActivity extends AppCompatActivity {
                 minAge = Integer.parseInt(minAgeEditTxt.getText().toString().trim());
                 maxAge = Integer.parseInt(maxAgeEditTxt.getText().toString().trim());
 
+
                 if ((!femalesCB.isChecked() && !malesCB.isChecked()) || minAge == 0 || maxAge == 0)
                 {
                     Toast.makeText(getApplicationContext(), "Please add all required information.", Toast.LENGTH_SHORT).show();
@@ -66,18 +66,19 @@ public class PreferencesActivity extends AppCompatActivity {
                         preferredSex = "males";
                     }
 
-                    //String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, null, null, minAge, maxAge);
-                    dbHelper.addUserToDB(user).addOnSuccessListener(success->
-                    {
-                        Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
-                    }).addOnFailureListener(error->
-                    {
-                        Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-
-                    Intent intent = new Intent(getApplicationContext(), ProfileInfoActivity.class);
-                    startActivity(intent);
+                    Intent prefIntent = new Intent(getApplicationContext(), ProfileInfoActivity.class);
+                    Bundle prefBundle =  new Bundle();
+                    prefBundle.putString("email", email);
+                    prefBundle.putString("password", password);
+                    prefBundle.putString("name", name);
+                    prefBundle.putString("localisation", localisation);
+                    prefBundle.putInt("age", age);
+                    prefBundle.putString("sex", sex);
+                    prefBundle.putString("preferredSex", preferredSex);
+                    prefBundle.putInt("minAge", minAge);
+                    prefBundle.putInt("maxAge", maxAge);
+                    prefIntent.putExtras(prefBundle);
+                    startActivity(prefIntent);
                     finish();
                 }
 

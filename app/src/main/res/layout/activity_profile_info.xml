@@ -30,25 +30,11 @@
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_marginTop="20dp"
+            android:src="@drawable/starting_avatar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/color5"
-            android:indeterminateTintMode="src_atop"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainPictureImageView" />
 
         <Button
             android:id="@+id/cameraButton"
@@ -67,7 +53,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
+            app:layout_constraintTop_toBottomOf="@+id/mainPictureImageView" />
 
         <Button
             android:id="@+id/galleryButton"
@@ -110,8 +96,10 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/description_edit_text"
             android:ems="20"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
             android:hint="@string/profile_info5"
-            android:textAlignment="center"
+
             android:textColor="@color/black"
             android:textColorHint="@color/gray"
             android:textSize="24dp"
@@ -138,6 +126,8 @@
             app:layout_constraintHorizontal_bias="0.532"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
