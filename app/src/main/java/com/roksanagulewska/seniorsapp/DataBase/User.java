@@ -12,7 +12,7 @@ public class User {
     private String localisation; //profile
     private String preferredSex; //profile
     private String description; //profile
-    private Bitmap mainPicture; //profile
+    private String mainPicture; //profile
     private int minPrefAge = 0; //profile
     private int maxPrefAge = 0; //profile
     //dodać walidację do setterów
@@ -22,7 +22,7 @@ public class User {
     }
 
 
-    public User(String userId, String email, String password, String name, int age, String sex, String localisation, String preferredSex, String description, Bitmap mainPicture, int minPrefAge, int maxPrefAge) {
+    public User(String userId, String email, String password, String name, int age, String sex, String localisation, String preferredSex, String description, String mainPicture, int minPrefAge, int maxPrefAge) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -109,13 +109,13 @@ public class User {
         this.description = description;
     }
 
-    public Bitmap getMainPicture() {
-        return mainPicture;
-    }
+    //public Bitmap getMainPicture() {
+        //return mainPicture;
+    //}
 
-    public void setMainPicture(Bitmap mainPicture) {
-        this.mainPicture = mainPicture;
-    }
+    //public void setMainPicture(Bitmap mainPicture) {
+       // this.mainPicture = mainPicture;
+    //}
 
     public int getMinPrefAge() {
         return minPrefAge;

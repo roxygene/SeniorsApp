@@ -49,9 +49,9 @@ import java.util.Date;
 
 public class ProfileInfoActivity extends AppCompatActivity {
 
-    public static final int CAMERA_INTENT_CODE = 99;
-    public static final int CAMERA_ANG_GALLERY_PERMISSION_CODE = 100;
-    public static final int GALLERY_INTENT_CODE = 101;
+    public static final int CAMERA_REQUEST_CODE = 99;
+    public static final int CAMERA_PERM_CODE = 100; //camera permission code
+    //public static final int GALLERY_REQUEST_CODE = 101;
 
 
     private Uri imageUri;
@@ -60,11 +60,13 @@ public class ProfileInfoActivity extends AppCompatActivity {
     DataBaseHelper dbHelper = new DataBaseHelper();
     User user;
     String currentPhotoPath;
+    Bitmap bitmap;
+    String syy = "ddd";
 
     ImageView mainPicture;
     Button cameraBtn, galleryBtn, confirmBtn;
     EditText descriptionEditTxt;
-    String whichButtonClicked;
+    //String whichButtonClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,14 +87,14 @@ public class ProfileInfoActivity extends AppCompatActivity {
         String localisation = prefBundle.getString("localisation");
         int age = prefBundle.getInt("age");
         String sex = prefBundle.getString("sex");
-        String preferredSex = prefBundle.getString("prefferedSex");
+        String preferredSex = prefBundle.getString("preferredSex");
         int minAge = prefBundle.getInt("minAge");
         int maxAge = prefBundle.getInt("maxAge");
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                whichButtonClicked = "camera";
+                //whichButtonClicked = "camera";
                 askCameraPermission();
             }
         });
@@ -100,16 +102,28 @@ public class ProfileInfoActivity extends AppCompatActivity {
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                whichButtonClicked = "gallery";
+                //whichButtonClicked = "gallery";
                 askCameraPermission();
-            }
-
             }
         });
 
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String description = descriptionEditTxt.getText().toString().trim();
+
+                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, syy, minAge, maxAge);
+                dbHelper.addUserToDB(user).addOnSuccessListener(success->
+                {
+                    Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(error->
+                {
+                    Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+
+                Intent navIntent = new Intent(getApplicationContext(), NavigationActivity.class);
+                startActivity(navIntent);
+                finish();
 
             }
         });
@@ -118,7 +132,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
     //zapytanie o pozwolenie na dostęp do aparatu
     private void askCameraPermission() {
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_ANG_GALLERY_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
         } else {
             //if (whichButtonClicked == "camera")
                 openCamera();
@@ -131,13 +145,13 @@ public class ProfileInfoActivity extends AppCompatActivity {
     //sprawdzenie pozwolenia
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_ANG_GALLERY_PERMISSION_CODE) {
+        if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (whichButtonClicked == "camera")
+                //if (whichButtonClicked == "camera")
                     openCamera();
-                else if (whichButtonClicked == "gallery") {
-                    dispatchTakePictureIntent();
-                }
+                //} else if (whichButtonClicked == "gallery") {
+                    //dispatchTakePictureIntent();
+                //}
             } else {
                 Toast.makeText(getApplicationContext(), "Camera Permission is Required.", Toast.LENGTH_SHORT).show();
             }
@@ -146,36 +160,40 @@ public class ProfileInfoActivity extends AppCompatActivity {
 
     private void openCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_INTENT_CODE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == CAMERA_INTENT_CODE) {
-            Bitmap bitmap =  (Bitmap) data.getExtras().get("data");
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            bitmap =  (Bitmap) data.getExtras().get("data");
             mainPicture.setImageBitmap(bitmap);
-        } else if (requestCode == GALLERY_INTENT_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-            File file = new File(currentPhotoPath);
-            mainPicture.setImageURI(Uri.fromFile(file));
+       // } else if (requestCode == GALLERY_INTENT_CODE) {
+         //   if (resultCode == Activity.RESULT_OK) {
+           // File file = new File(currentPhotoPath);
+            //mainPicture.setImageURI(Uri.fromFile(file));
         }
     }
 
+/*
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName, //prefix
+                ".jpg",// suffix
+                storageDir // directory
+
         );
 
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -199,7 +217,8 @@ public class ProfileInfoActivity extends AppCompatActivity {
         }
     }
 
-    /*
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CAMERA_PERMISSION_CODE) {
@@ -208,7 +227,8 @@ public class ProfileInfoActivity extends AppCompatActivity {
         }
     }
 
-     */
+    */
+
 
     /*
         storageReference = FirebaseStorage.getInstance().getReference("Images");

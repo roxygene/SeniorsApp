@@ -207,7 +207,7 @@ public class FindNewFriendsFragment extends Fragment {
 
         checkUsersPreferences();
         listPotentialMatches();
-        //dbHelper.addPotentialMatchesToDb(potentialMatchesList);
+        dbHelper.addPotentialMatchesToDb(potentialMatchesList);
 
     }
 
@@ -236,6 +236,7 @@ public class FindNewFriendsFragment extends Fragment {
         ValueEventListener checkPreferencesValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 prefferedSex = dataSnapshot.child("preferredSex").getValue().toString();
                 minPrefAge = Integer.parseInt(dataSnapshot.child("minPrefAge").getValue().toString());
                 maxPrefAge = Integer.parseInt(dataSnapshot.child("maxPrefAge").getValue().toString());
