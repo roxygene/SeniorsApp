@@ -225,7 +225,7 @@ public class FindNewFriendsFragment extends Fragment {
         Log.d("PREFL", "ListaMatches: " + potentialMatchesList.size());
 
         for (User potentialMatch : potentialMatchesList) {
-            items.add(new ItemModel(R.drawable.sample1, potentialMatch.getUserId(), potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), "descriptionABC"));
+            items.add(new ItemModel(R.drawable.sample1, potentialMatch.getEmail(), potentialMatch.getUserId(), potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), potentialMatch.getMainPictureName(), potentialMatch.getImageUri(), potentialMatch.getDescription()));
         }
 
         Log.d("PREFL", "ListaItem: " + items.size());

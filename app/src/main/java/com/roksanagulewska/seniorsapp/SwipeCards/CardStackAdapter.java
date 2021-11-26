@@ -1,5 +1,6 @@
 package com.roksanagulewska.seniorsapp.SwipeCards;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.storage.StorageReference;
+import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.R;
 import com.squareup.picasso.Picasso;
 
@@ -17,6 +20,7 @@ import java.util.List;
 public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.ViewHolder> {
 
     private List<ItemModel> items;
+    private DataBaseHelper dbHelper = new DataBaseHelper();
 
     public CardStackAdapter(List<ItemModel> items) {
         this.items = items;
@@ -52,7 +56,12 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         }
 
         void setData(ItemModel data) {
+            //Uri imageUri;
+            //StorageReference imageStoragePath = dbHelper.getStorageReference().child("Pictures").child(data.getImageName());
+
+
             Picasso.get()
+                    //.load(data.getImageUri())
                     .load(data.getImage())
                     .fit()
                     .centerCrop()

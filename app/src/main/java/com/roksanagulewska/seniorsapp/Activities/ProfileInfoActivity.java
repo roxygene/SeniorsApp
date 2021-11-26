@@ -38,7 +38,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
-import com.roksanagulewska.seniorsapp.DataBase.UploadImage;
 import com.roksanagulewska.seniorsapp.DataBase.User;
 import com.roksanagulewska.seniorsapp.R;
 import com.squareup.picasso.Picasso;
@@ -53,22 +52,17 @@ public class ProfileInfoActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 99;
     public static final int CAMERA_PERM_CODE = 100; //camera permission code
     public static final int GALLERY_REQUEST_CODE = 101;
-    //static final int REQUEST_TAKE_PHOTO = 111;
 
 
-    private Uri imageUri;
-    private StorageReference storageReference;
-    private DatabaseReference databaseReference;
+    private Uri contentUri;
     DataBaseHelper dbHelper = new DataBaseHelper();
     User user;
     String currentPhotoPath;
-    Bitmap bitmap;
-    String syy = "ddd";
+    String fileName;
 
     ImageView mainPicture;
     Button cameraBtn, galleryBtn, confirmBtn;
     EditText descriptionEditTxt;
-    //String whichButtonClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +87,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
         int minAge = prefBundle.getInt("minAge");
         int maxAge = prefBundle.getInt("maxAge");
 
+
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +108,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String description = descriptionEditTxt.getText().toString().trim();
 
-                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, syy, minAge, maxAge);
+                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, fileName, contentUri, minAge, maxAge);
                 dbHelper.addUserToDB(user).addOnSuccessListener(success->
                 {
                     Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
@@ -174,17 +169,21 @@ public class ProfileInfoActivity extends AppCompatActivity {
                 Log.d("CAMX", "Absolute URL of Image is " + Uri.fromFile(file));
 
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(file);
+                contentUri = Uri.fromFile(file);
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
+                fileName = file.getName();
+                uploadImageToFirebase(file.getName(), contentUri);
             }
         }else if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Uri contentUri = data.getData();
+                contentUri = data.getData();
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
+                String imageFileName = "image_" + timeStamp + "." + getFileExt(contentUri);
                 Log.d("CAMX", "onActivityResult: Gallery Image Uri: " + imageFileName);
                 mainPicture.setImageURI(contentUri);
+                fileName = imageFileName;
+                uploadImageToFirebase(imageFileName, contentUri);
             }
         }
     }
@@ -198,7 +197,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "image_" + timeStamp + "_";
         //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -233,6 +232,27 @@ public class ProfileInfoActivity extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE); //REQUEST_TAKE_PHOTO
             }
         }
+    }
+
+    public void uploadImageToFirebase(String fileName, Uri contentUri) {
+        StorageReference imageStorageReference = dbHelper.getStorageReference().child("Pictures").child(fileName);
+        imageStorageReference.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imageStorageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d("CAMX", "onSuccess: Uploaded image URL is " + uri.toString());
+                    }
+                });
+                Toast.makeText(getApplicationContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Upload failed!", Toast.LENGTH_SHORT);
+            }
+        });
     }
 
 /*

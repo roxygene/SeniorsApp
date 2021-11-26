@@ -1,10 +1,15 @@
 package com.roksanagulewska.seniorsapp.SwipeCards;
 
+import android.net.Uri;
+
 public class ItemModel {
     private int image;
+    private String email;
     private String name;
     private int age;
     private String localisation;
+    private String imageName;
+    private Uri imageUri;
     private String description;
     private String userId;
 
@@ -12,12 +17,15 @@ public class ItemModel {
     public ItemModel() {
     }
 
-    public ItemModel(int image, String userId, String name, int age, String localisation, String description) {
+    public ItemModel(int image, String email, String userId, String name, int age, String localisation, String imageName, Uri imageUri, String description) {
         this.image = image;
+        this.email = email;
         this.userId = userId;
         this.name = name;
         this.age = age;
         this.localisation = localisation;
+        this.imageName = imageName;
+        this.imageUri = imageUri;
         this.description = description;
     }
 
@@ -28,6 +36,31 @@ public class ItemModel {
     public void setImage(int image) {
         this.image = image;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public Uri getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
+    }
+
 
     public String getUserId() {
         return userId;

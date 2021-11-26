@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.R;
 
@@ -21,7 +23,6 @@ import static java.lang.Thread.sleep;
 public class StartingActivity extends AppCompatActivity {
 
     private Button loginButton, registerButton;
-    DataBaseHelper dbHelper = new DataBaseHelper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,6 +1,7 @@
 package com.roksanagulewska.seniorsapp.DataBase;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 public class User {
     private String userId;
@@ -12,7 +13,8 @@ public class User {
     private String localisation; //profile
     private String preferredSex; //profile
     private String description; //profile
-    private String mainPicture; //profile
+    private String mainPictureName; //profile
+    private Uri imageUri;
     private int minPrefAge = 0; //profile
     private int maxPrefAge = 0; //profile
     //dodać walidację do setterów
@@ -22,7 +24,7 @@ public class User {
     }
 
 
-    public User(String userId, String email, String password, String name, int age, String sex, String localisation, String preferredSex, String description, String mainPicture, int minPrefAge, int maxPrefAge) {
+    public User(String userId, String email, String password, String name, int age, String sex, String localisation, String preferredSex, String description, String mainPictureName, Uri uri, int minPrefAge, int maxPrefAge) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -32,9 +34,18 @@ public class User {
         this.localisation = localisation;
         this.preferredSex = preferredSex;
         this.description = description;
-        this.mainPicture = mainPicture;
+        this.mainPictureName = mainPictureName;
+        this.imageUri = imageUri;
         this.minPrefAge = minPrefAge;
         this.maxPrefAge = maxPrefAge;
+    }
+
+    public Uri getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
     }
 
     public String getUserId() {
@@ -109,13 +120,13 @@ public class User {
         this.description = description;
     }
 
-    //public Bitmap getMainPicture() {
-        //return mainPicture;
-    //}
+    public String getMainPictureName() {
+        return mainPictureName;
+    }
 
-    //public void setMainPicture(Bitmap mainPicture) {
-       // this.mainPicture = mainPicture;
-    //}
+    public void setMainPicture(String mainPicture) {
+        this.mainPictureName = mainPictureName;
+    }
 
     public int getMinPrefAge() {
         return minPrefAge;
