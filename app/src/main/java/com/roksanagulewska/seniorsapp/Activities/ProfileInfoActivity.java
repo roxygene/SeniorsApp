@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -51,7 +52,8 @@ public class ProfileInfoActivity extends AppCompatActivity {
 
     public static final int CAMERA_REQUEST_CODE = 99;
     public static final int CAMERA_PERM_CODE = 100; //camera permission code
-    //public static final int GALLERY_REQUEST_CODE = 101;
+    public static final int GALLERY_REQUEST_CODE = 101;
+    //static final int REQUEST_TAKE_PHOTO = 111;
 
 
     private Uri imageUri;
@@ -94,7 +96,6 @@ public class ProfileInfoActivity extends AppCompatActivity {
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //whichButtonClicked = "camera";
                 askCameraPermission();
             }
         });
@@ -102,8 +103,8 @@ public class ProfileInfoActivity extends AppCompatActivity {
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //whichButtonClicked = "gallery";
-                askCameraPermission();
+                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(gallery, GALLERY_REQUEST_CODE);
             }
         });
 
@@ -135,7 +136,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
         } else {
             //if (whichButtonClicked == "camera")
-                openCamera();
+                dispatchTakePictureIntent();//openCamera();
 //            else if (whichButtonClicked == "gallery") {
 //                dispatchTakePictureIntent();
 //            }
@@ -148,39 +149,58 @@ public class ProfileInfoActivity extends AppCompatActivity {
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //if (whichButtonClicked == "camera")
-                    openCamera();
+                    //openCamera(); ******
                 //} else if (whichButtonClicked == "gallery") {
                     //dispatchTakePictureIntent();
                 //}
+                dispatchTakePictureIntent();
             } else {
                 Toast.makeText(getApplicationContext(), "Camera Permission is Required.", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void openCamera() {
+    /*private void openCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CAMERA_REQUEST_CODE) {
-            bitmap =  (Bitmap) data.getExtras().get("data");
-            mainPicture.setImageBitmap(bitmap);
-       // } else if (requestCode == GALLERY_INTENT_CODE) {
-         //   if (resultCode == Activity.RESULT_OK) {
-           // File file = new File(currentPhotoPath);
-            //mainPicture.setImageURI(Uri.fromFile(file));
+            if (resultCode == Activity.RESULT_OK) {
+                File file = new File(currentPhotoPath);
+                mainPicture.setImageURI(Uri.fromFile(file));
+                Log.d("CAMX", "Absolute URL of Image is " + Uri.fromFile(file));
+
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(file);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+            }
+        }else if (requestCode == GALLERY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri contentUri = data.getData();
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
+                Log.d("CAMX", "onActivityResult: Gallery Image Uri: " + imageFileName);
+                mainPicture.setImageURI(contentUri);
+            }
         }
     }
 
-/*
+    private String getFileExt(Uri contentUri) {
+        ContentResolver c = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName, //prefix
                 ".jpg",// suffix
@@ -192,8 +212,6 @@ public class ProfileInfoActivity extends AppCompatActivity {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
-
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -209,15 +227,15 @@ public class ProfileInfoActivity extends AppCompatActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
+                        "com.roksanagulewska.android.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, CAMERA_INTENT_CODE);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE); //REQUEST_TAKE_PHOTO
             }
         }
     }
 
-
+/*
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
