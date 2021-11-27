@@ -56,21 +56,12 @@ public class DataBaseHelper {
     public void addPotentialMatchesToDb(List<User> potentialMatchesList) {
         for (User element : potentialMatchesList) {
             //if (!(databaseReference.child("Users").child(currentUserId).child("Connections").child(element.getUserId())) {
-                currentUserReference.child("Connections").child(element.getUserId()).child("Seen").setValue("no");
-                currentUserReference.child("Connections").child(element.getUserId()).child("Liked").setValue("no");
-                currentUserReference.child("Connections").child(element.getUserId()).child("Matched").setValue("no");
+                currentUserReference.child("Connections").child(element.getUserId()).child("Liked").setValue("not yet");
+                currentUserReference.child("Connections").child(element.getUserId()).child("Matched").setValue("no yet");
             //}
         }
-
-
-        /*Log.d("DBMAT", "Jestem w appPot");
-        HashMap<String, Object> matchesMap = new HashMap<>();
-        for (User element : potentialMatchesList) {
-            Log.d("DBMAT", "Jestem w pętli");
-            matchesMap.put(element.getUserId(), "no"); //brak powiązania
-        }
-        currentUserReference.child("Connections").updateChildren(matchesMap);*/
     }
+
 
 
     public StorageReference getStorageReference() {

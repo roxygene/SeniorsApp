@@ -138,7 +138,6 @@ public class FindNewFriendsFragment extends Fragment {
                     String cardUser = items.get(0).getUserId();
                     Log.d("TEEEST", "user ID: " + cardUser);
                     Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("Seen", "yes");
                     map.put("Liked", "yes");
                     dbHelper.getCurrentUserReference().child("Connections").child(cardUser).updateChildren(map);
                 }
@@ -151,7 +150,7 @@ public class FindNewFriendsFragment extends Fragment {
                     String cardUser = items.get(0).getUserId();
                     Toast.makeText(getContext(), "Dislike", Toast.LENGTH_SHORT).show();
                     Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("Seen", "yes");
+                    map.put("Liked", "no");
                     dbHelper.getCurrentUserReference().child("Connections").child(cardUser).updateChildren(map);
                 }
                 /*if (direction == Direction.Bottom){
@@ -199,7 +198,6 @@ public class FindNewFriendsFragment extends Fragment {
         manager.setCanScrollHorizontal(true);
         manager.setSwipeableMethod(SwipeableMethod.Manual);
         manager.setOverlayInterpolator(new LinearInterpolator());
-        //adapter = new CardStackAdapter(addList());
         adapter = new CardStackAdapter(items);
         cardStackView.setLayoutManager(manager);
         cardStackView.setAdapter(adapter);
@@ -288,8 +286,6 @@ public class FindNewFriendsFragment extends Fragment {
                 for (User element : potentialMatchesList) {
                     Log.d("PREF_USER", element.getEmail());
                 }
-                
-                //potentialMatchesList.forEach((element) -> Log.d("PREF_USER", element.getEmail())); do notatek
 
                 if (isFirstTime) {
                     dbHelper.addPotentialMatchesToDb(potentialMatchesList);
