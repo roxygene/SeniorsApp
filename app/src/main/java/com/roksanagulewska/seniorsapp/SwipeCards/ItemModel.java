@@ -9,7 +9,8 @@ public class ItemModel {
     private int age;
     private String localisation;
     private String imageName;
-    private Uri imageUri;
+    private String imageURL;
+    private String imageUri;
     private String description;
     private String userId;
 
@@ -17,7 +18,7 @@ public class ItemModel {
     public ItemModel() {
     }
 
-    public ItemModel(int image, String email, String userId, String name, int age, String localisation, String imageName, Uri imageUri, String description) {
+    public ItemModel(int image, String email, String userId, String name, int age, String localisation, String imageName, String imageURL, String imageUri, String description) {
         this.image = image;
         this.email = email;
         this.userId = userId;
@@ -25,6 +26,7 @@ public class ItemModel {
         this.age = age;
         this.localisation = localisation;
         this.imageName = imageName;
+        this.imageURL = imageURL;
         this.imageUri = imageUri;
         this.description = description;
     }
@@ -53,11 +55,19 @@ public class ItemModel {
         this.imageName = imageName;
     }
 
-    public Uri getImageUri() {
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public String getImageUri() {
         return imageUri;
     }
 
-    public void setImageUri(Uri imageUri) {
+    public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }
 

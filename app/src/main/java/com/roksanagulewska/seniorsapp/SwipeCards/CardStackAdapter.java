@@ -21,6 +21,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
     private List<ItemModel> items;
     private DataBaseHelper dbHelper = new DataBaseHelper();
+    //ItemModel currentItem;
 
     public CardStackAdapter(List<ItemModel> items) {
         this.items = items;
@@ -37,6 +38,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.setData(items.get(position));
+        //currentItem = items.get(position);
     }
 
     @Override
@@ -59,10 +61,10 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
             //Uri imageUri;
             //StorageReference imageStoragePath = dbHelper.getStorageReference().child("Pictures").child(data.getImageName());
 
-
             Picasso.get()
-                    //.load(data.getImageUri())
-                    .load(data.getImage())
+                    .load(data.getImageUri())
+                    //.load(data.getImage())
+                    //.load(currentItem.getImageUri())
                     .fit()
                     .centerCrop()
                     .into(image);

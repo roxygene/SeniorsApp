@@ -55,6 +55,8 @@ public class ProfileInfoActivity extends AppCompatActivity {
 
 
     private Uri contentUri;
+    private String imageUri;
+    String imageUrl;
     DataBaseHelper dbHelper = new DataBaseHelper();
     User user;
     String currentPhotoPath;
@@ -108,7 +110,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String description = descriptionEditTxt.getText().toString().trim();
 
-                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, fileName, contentUri, minAge, maxAge);
+                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, fileName, imageUrl, imageUri, minAge, maxAge);
                 dbHelper.addUserToDB(user).addOnSuccessListener(success->
                 {
                     Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
@@ -130,11 +132,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
         } else {
-            //if (whichButtonClicked == "camera")
-                dispatchTakePictureIntent();//openCamera();
-//            else if (whichButtonClicked == "gallery") {
-//                dispatchTakePictureIntent();
-//            }
+                dispatchTakePictureIntent();
         }
     }
 
@@ -143,22 +141,12 @@ public class ProfileInfoActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //if (whichButtonClicked == "camera")
-                    //openCamera(); ******
-                //} else if (whichButtonClicked == "gallery") {
-                    //dispatchTakePictureIntent();
-                //}
                 dispatchTakePictureIntent();
             } else {
                 Toast.makeText(getApplicationContext(), "Camera Permission is Required.", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
-    /*private void openCamera() {
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -174,6 +162,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
                 this.sendBroadcast(mediaScanIntent);
                 fileName = file.getName();
                 uploadImageToFirebase(file.getName(), contentUri);
+                //imageUri = data.getData();
             }
         }else if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -184,6 +173,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
                 mainPicture.setImageURI(contentUri);
                 fileName = imageFileName;
                 uploadImageToFirebase(imageFileName, contentUri);
+                //imageUri = data.getData();
             }
         }
     }
@@ -236,158 +226,32 @@ public class ProfileInfoActivity extends AppCompatActivity {
 
     public void uploadImageToFirebase(String fileName, Uri contentUri) {
         StorageReference imageStorageReference = dbHelper.getStorageReference().child("Pictures").child(fileName);
-        imageStorageReference.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageStorageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.d("CAMX", "onSuccess: Uploaded image URL is " + uri.toString());
-                    }
-                });
-                Toast.makeText(getApplicationContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Upload failed!", Toast.LENGTH_SHORT);
-            }
-        });
-    }
 
-/*
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == CAMERA_PERMISSION_CODE) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            mainPicture.setImageBitmap(bitmap);
-        }
-    }
-
-    */
-
-
-    /*
-        storageReference = FirebaseStorage.getInstance().getReference("Images");
-        databaseReference = FirebaseDatabase.getInstance().getReference("Images");
-
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                uploadImage();
-
-                String description = descriptionEditTxt.getText().toString().trim();
-
-                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, null, minAge, maxAge);
-                dbHelper.addUserToDB(user).addOnSuccessListener(success->
-                {
-                    Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
-                }).addOnFailureListener(error->
-                {
-                    Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
-
-                Intent pInfoIntent = new Intent(getApplicationContext(), NavigationActivity.class);
-                Bundle pInfoBundle = new Bundle();
-                pInfoBundle.putString("email", email);
-                pInfoBundle.putString("password", password);
-                pInfoBundle.putString("name", name);
-                pInfoBundle.putString("localisation", localisation);
-                pInfoBundle.putInt("age", age);
-                pInfoBundle.putString("sex", sex);
-                pInfoIntent.putExtras(pInfoBundle);
-                startActivity(pInfoIntent);
-                finish();
-
-            }
-        });
-
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_INTENT_CODE);
-            }
-        });
-
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-    }
-
-    private void uploadImage() {
-        if (imageUri != null) {
-            //utworzenie nazwy pliku w bazie danych
-            StorageReference fileReference = storageReference.child("Images/" + System.currentTimeMillis()
-            + "." +getFileExtension(imageUri));
-
-            fileReference.putFile(imageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        //if (imageUri != null) {
+            imageStorageReference.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imageStorageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    progressBar.setProgress(0);
-                                }
-                            }, 5000); //opóźnia ładowanie proressbara o 5000ms
-                            Toast.makeText(getApplicationContext(), "Upload successful", Toast.LENGTH_LONG).show();
-                            UploadImage uploadImage = new UploadImage(taskSnapshot.getStorage().getDownloadUrl().toString());
-                            String uploadId = databaseReference.push().getKey();
-                            databaseReference.child(uploadId).setValue(uploadImage);
+                        public void onSuccess(Uri uri) {
+                            Log.d("CAMX", "onSuccess: Uploaded image URL is " + uri.toString());
+                            imageUri = uri.toString();
+                            imageUrl = imageStorageReference.getDownloadUrl().toString();
+                            Log.d("CAMX", "onSuccess: Uploaded image URL2 is " + imageUrl);
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        //jeśli będę chciała dodać progresBar to tu
-                        double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        progressBar.setProgress((int) progress);
-                    }
                     });
-        } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
-        }
+                    Toast.makeText(getApplicationContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), "Upload failed!", Toast.LENGTH_SHORT);
+                }
+            });
+        //} else {
+          //  Toast.makeText(getApplicationContext(), "No file selected", Toast.LENGTH_SHORT);
+        //}
+
 
     }
-
-    private String getFileExtension(Uri uri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
-
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-
-            Picasso.get().load(imageUri).into(mainPicture);
-
-        }
-    }
-    */
 }
