@@ -58,19 +58,26 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         }
 
         void setData(ItemModel data) {
-            //Uri imageUri;
-            //StorageReference imageStoragePath = dbHelper.getStorageReference().child("Pictures").child(data.getImageName());
-
-            Picasso.get()
-                    .load(data.getImageUri())
-                    //.load(data.getImage())
-                    //.load(currentItem.getImageUri())
-                    .fit()
-                    .centerCrop()
-                    .into(image);
-            name.setText(data.getName());
-            age.setText(String.valueOf(data.getAge()));
-            localisation.setText(data.getLocalisation());
+            if (data.getImageName().length() > 27) {
+                Picasso.get()
+                        .load(data.getImageUri())
+                        .fit()
+                        .centerCrop()
+                        .rotate(90)
+                        .into(image);
+                name.setText(data.getName());
+                age.setText(String.valueOf(data.getAge()));
+                localisation.setText(data.getLocalisation());
+            } else {
+                Picasso.get()
+                        .load(data.getImageUri())
+                        .fit()
+                        .centerCrop()
+                        .into(image);
+                name.setText(data.getName());
+                age.setText(String.valueOf(data.getAge()));
+                localisation.setText(data.getLocalisation());
+            }
         }
     }
 
