@@ -7,9 +7,11 @@
     <string name="login1">Sign in</string>
     <string name="login2">e-mail</string>
     <string name="login3">password</string>
+    <string name="login4">Are you not registered? Sign up</string>
     <string name="registration1">Sign up</string>
     <string name="registration2">e-mail</string>
     <string name="registration3">password</string>
+    <string name="registration4">Do you have an account? Sign in</string>
     <string name="users_info1">Give us some information about yourself</string>
     <string name="users_info2">Name:</string>
     <string name="users_info3">Localisation:</string>

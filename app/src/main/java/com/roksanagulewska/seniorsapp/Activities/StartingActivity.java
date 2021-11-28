@@ -22,24 +22,21 @@ import static java.lang.Thread.sleep;
 
 public class StartingActivity extends AppCompatActivity {
 
-    private Button loginButton, registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
-
-        loginButton = findViewById(R.id.loginBtn);
-        registerButton = findViewById(R.id.registerBtn);
-
     }
 
+    //metoda onClick przycisku przekierowującego do aktywności logowania
     public void goToLogInOnClick(View view) {
         Intent intent = new Intent(getApplicationContext(), LogInActivity.class);
         startActivity(intent);
         finish();
     }
 
+    //metoda onClick przycisku przekierowującego do aktywności rejestracji
     public void goToRegisterOnClick(View view) {
         Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
         startActivity(intent);

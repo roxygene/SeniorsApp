@@ -3,13 +3,11 @@ package com.roksanagulewska.seniorsapp.SwipeCards;
 import android.net.Uri;
 
 public class ItemModel {
-    private int image;
     private String email;
     private String name;
     private int age;
     private String localisation;
     private String imageName;
-    private String imageURL;
     private String imageUri;
     private String description;
     private String userId;
@@ -18,25 +16,15 @@ public class ItemModel {
     public ItemModel() {
     }
 
-    public ItemModel(int image, String email, String userId, String name, int age, String localisation, String imageName, String imageURL, String imageUri, String description) {
-        this.image = image;
+    public ItemModel(String email, String userId, String name, int age, String localisation, String imageName, String imageUri, String description) {
         this.email = email;
         this.userId = userId;
         this.name = name;
         this.age = age;
         this.localisation = localisation;
         this.imageName = imageName;
-        this.imageURL = imageURL;
         this.imageUri = imageUri;
         this.description = description;
-    }
-
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
     }
 
     public String getEmail() {
@@ -55,14 +43,6 @@ public class ItemModel {
         this.imageName = imageName;
     }
 
-    public String getImageURL() {
-        return imageURL;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
-
     public String getImageUri() {
         return imageUri;
     }
@@ -70,7 +50,6 @@ public class ItemModel {
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }
-
 
     public String getUserId() {
         return userId;

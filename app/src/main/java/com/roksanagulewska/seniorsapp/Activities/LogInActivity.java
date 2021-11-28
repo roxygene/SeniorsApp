@@ -24,8 +24,7 @@ import com.roksanagulewska.seniorsapp.R;
 public class LogInActivity extends AppCompatActivity {
 
     private EditText emailEditTxt, passwordEditTxt;
-    private Button loginBtn;
-
+    private Button loginBtn, goToRegistrationBtn;
     FirebaseAuth auth;
     private int backCounter = 0;
 
@@ -34,22 +33,24 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        emailEditTxt = findViewById(R.id.emailEditTxt);
-        passwordEditTxt = findViewById(R.id.passwordEditTxt);
-        loginBtn = findViewById(R.id.loginBtn);
+        emailEditTxt = findViewById(R.id.emailEditTxt); //pole do wprowadzania emaila
+        passwordEditTxt = findViewById(R.id.passwordEditTxt); //pole do wprowadzania hasła
+        loginBtn = findViewById(R.id.loginBtn); //przycisk logowania
+        goToRegistrationBtn = findViewById(R.id.signUpButton); //przycisk przekierowania do aktywności rejestracji
 
-        auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance(); //instancja autentykacji Firebase
 
-        //Zapisywanie danych w firebase przy kliknięciu przycisku
+        //przycisk logowania
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (isConnected()) {
-                    String email = emailEditTxt.getText().toString();
-                    String password = passwordEditTxt.getText().toString();
-                    loginUser(email, password);
-                } else {
+                if (isConnected()) { //jeśli urządzenie ma połączenie z siecią
+                    String email = emailEditTxt.getText().toString().trim(); //pobranie emaila z okna tekstowego
+                    String password = passwordEditTxt.getText().toString().trim(); //pobranie hasła z okna tekstowego
+                    loginUser(email, password); //logowanie użytkownika przy pomocy emaila i hasła
+                } else { //jeśli urządzenie nie ma połączenia z siecią
+                    //przejście do aktywności LogInInternetAccessActivity
                     Intent i = new Intent(getApplicationContext(), LoginInternetAccessActivity.class);
                     startActivity(i);
                     finish();
@@ -57,18 +58,27 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
 
+        goToRegistrationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { //w przypadku kliknięcia tego przycisku następuje przekierowanie do aktywności RegistrationActivity
+                Intent registerIntent = new Intent(getApplicationContext(), RegistrationActivity.class);
+                startActivity(registerIntent);
+                finish();
+            }
+        });
+
     }
 
-    private void loginUser(String email, String password) {
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    private void loginUser(String email, String password) { //logowanie użytkownika przy pomocy podanego przez niego emaila i hasła
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() { //zalogowanie użytkownika
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
+                if(task.isSuccessful()) { //jeżeli się udało
                     Toast.makeText(getApplicationContext(), "Signing in succesfull!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
-                    startActivity(intent);
+                    startActivity(intent); //przejście do aktywności NavigationActivity
                     finish();
-                }else{
+                }else{ //jeżeli się nie udało
                     Toast.makeText(getApplicationContext(),"Incorrect email or password!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -77,30 +87,12 @@ public class LogInActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Called when the activity has detected the user's press of the back
-     * key. The {@link #getOnBackPressedDispatcher() OnBackPressedDispatcher} will be given a
-     * chance to handle the back button before the default behavior of
-     * {@link Activity#onBackPressed()} is invoked.
-     *
-     * @see #getOnBackPressedDispatcher()
-     */
-    @Override //działa tak że 2 razy wyjście, a raz nic
-    public void onBackPressed() {
-        backCounter++;
-
-        if (backCounter == 2) {
-            super.onBackPressed();
-        } else {
-            Toast.makeText(getApplicationContext(), "Press back again to exit.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //metoda sprawdza czy urządzenie jest połączone z internetem
+    //metoda sprawdzająca czy urządzenie jest połączone z internetem
     public boolean isConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
+        //sprawdzenie połącznia z siecią
         if (networkInfo != null) {
             if (networkInfo.isConnected()) {
                 return true;
@@ -112,5 +104,23 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when the activity has detected the user's press of the back
+     * key. The {@link #getOnBackPressedDispatcher() OnBackPressedDispatcher} will be given a
+     * chance to handle the back button before the default behavior of
+     * {@link Activity#onBackPressed()} is invoked.
+     *
+     * @see #getOnBackPressedDispatcher()
+     */
+    @Override
+    public void onBackPressed() { //przy dwukrotnym kliknięciu przycisku powrotu zamyka aplikację a przy jednokrotnym wyświetla komunikat
+        backCounter++;
+
+        if (backCounter == 2) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(getApplicationContext(), "Press back again to exit.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

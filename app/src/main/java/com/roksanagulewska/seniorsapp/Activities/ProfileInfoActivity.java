@@ -110,7 +110,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String description = descriptionEditTxt.getText().toString().trim();
 
-                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, fileName, imageUrl, imageUri, minAge, maxAge);
+                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, fileName, imageUri, minAge, maxAge);
                 dbHelper.addUserToDB(user).addOnSuccessListener(success->
                 {
                     Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
@@ -227,7 +227,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
     public void uploadImageToFirebase(String fileName, Uri contentUri) {
         StorageReference imageStorageReference = dbHelper.getStorageReference().child("Pictures").child(fileName);
 
-        //if (imageUri != null) {
+        //if (contentUri != null) {
             imageStorageReference.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

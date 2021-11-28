@@ -213,17 +213,12 @@ public class MessagesFragment extends Fragment {
             if(isAMatch == true) {
                 matchesList.add(element);
             }
-
             isAMatch = false;
-
         }
 
         for (String match : matchesList) {
-            Log.d("MATCHX", match);
+            Log.d("MATCHX", "matchesList: " + match);
         }
-
-
-
     }
 
 

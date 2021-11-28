@@ -61,9 +61,9 @@ public class PreferencesActivity extends AppCompatActivity {
                     if (femalesCB.isChecked() && malesCB.isChecked()) {
                         preferredSex = "both";
                     }else if (femalesCB.isChecked() && !malesCB.isChecked()) {
-                        preferredSex = "females";
+                        preferredSex = "female";
                     } else {
-                        preferredSex = "males";
+                        preferredSex = "male";
                     }
 
                     Intent prefIntent = new Intent(getApplicationContext(), ProfileInfoActivity.class);

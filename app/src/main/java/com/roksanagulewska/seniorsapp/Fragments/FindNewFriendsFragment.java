@@ -135,17 +135,13 @@ public class FindNewFriendsFragment extends Fragment {
                     Toast.makeText(getContext(), "Like", Toast.LENGTH_SHORT).show();
 
                     //zmiana statusu relacji użytkownika
-                    String cardUser = items.get(0).getUserId();
-                    Log.d("TEEEST", "user ID: " + cardUser);
+                    String cardUserId = items.get(0).getUserId();
+                    Log.d("TEEEST", "user ID: " + cardUserId);
+                    Log.d("TEEEST", "user name: " + items.get(0).getName());
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("Liked", "yes");
-                    dbHelper.getCurrentUserReference().child("Connections").child(cardUser).updateChildren(map);
-                }
-                /*if (direction == Direction.Top){
-                    //Toast.makeText(getContext(), "Direction Top", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getContext(), "More", Toast.LENGTH_SHORT).show();
-                }*/
-                if (direction == Direction.Left){
+                    dbHelper.getCurrentUserReference().child("Connections").child(cardUserId).updateChildren(map);
+                } else if (direction == Direction.Left){
                     //Toast.makeText(getContext(), "Direction Left", Toast.LENGTH_SHORT).show();
                     String cardUser = items.get(0).getUserId();
                     Toast.makeText(getContext(), "Dislike", Toast.LENGTH_SHORT).show();
@@ -153,14 +149,10 @@ public class FindNewFriendsFragment extends Fragment {
                     map.put("Liked", "no");
                     dbHelper.getCurrentUserReference().child("Connections").child(cardUser).updateChildren(map);
                 }
-                /*if (direction == Direction.Bottom){
-                    //Toast.makeText(getContext(), "Direction Bottom", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getContext(), "More", Toast.LENGTH_SHORT).show();
-                }*/
 
                 items.remove(0);//kiedy karta została przesunięta usuń ją ze stosu
 
-                // Paginating
+                // Paginacja
                 if (manager.getTopPosition() == adapter.getItemCount() - 5){
                     paginate();
                 }
@@ -223,7 +215,7 @@ public class FindNewFriendsFragment extends Fragment {
         Log.d("PREFL", "ListaMatches: " + potentialMatchesList.size());
 
         for (User potentialMatch : potentialMatchesList) {
-            items.add(new ItemModel(R.drawable.sample1, potentialMatch.getEmail(), potentialMatch.getUserId(), potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), potentialMatch.getMainPictureName(), potentialMatch.getImageUrlU(), potentialMatch.getImageUri(), potentialMatch.getDescription()));
+            items.add(new ItemModel(potentialMatch.getEmail(), potentialMatch.getUserId(), potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), potentialMatch.getMainPictureName(), potentialMatch.getImageUri(), potentialMatch.getDescription()));
         }
 
         Log.d("PREFL", "ListaItem: " + items.size());
@@ -262,9 +254,9 @@ public class FindNewFriendsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    Log.d("PREF", "sexP" + prefferedSex);
-                    Log.d("PREF", "sexUS " + user.getSex());
-                    Log.d("PREF", "ageUS" + user.getAge());
+                    Log.d("PREF", "sexP " + prefferedSex);
+                    Log.d("PREF", "sexU " + user.getSex());
+                    Log.d("PREF", "ageU " + user.getAge());
 
                         if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
                             if (user.getAge() <= maxPrefAge && user.getAge() >= minPrefAge) { //sprawdzenie dopasowania wieku
@@ -278,9 +270,6 @@ public class FindNewFriendsFragment extends Fragment {
                                 }
                             }
                         }
-
-
-                    Log.d("PREF", "jestem w pętli" + user.getEmail());
                 }
 
                 for (User element : potentialMatchesList) {
