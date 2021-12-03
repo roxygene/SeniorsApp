@@ -123,15 +123,17 @@ public class MessagesFragment extends Fragment {
              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                  for (DataSnapshot snapshot : dataSnapshot.getChildren()) { //dla każdego usera
                      if(potentialMatchesList.contains(snapshot.getKey())) { //sprawdzenie czy user jest na liście potentialMatchesList i jeśli tak
-                         if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("yes")) {//jeżeli ten user polajkował zalogowanego usera, to
-                             matchesList.add(snapshot.getKey()); //dodajemy go do listy matchy
-                             Map<String, Object> map = new HashMap<String, Object>();
-                             map.put("Matched", "yes");
-                             dbHelper.getCurrentUserReference().child("Connections").child(snapshot.getKey()).updateChildren(map); //zmiana Liked not yet na yes
-                         } else if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("no")) {
-                             Map<String, Object> map = new HashMap<String, Object>();
-                             map.put("Matched", "no");
-                             dbHelper.getCurrentUserReference().child("Connections").child(snapshot.getKey()).updateChildren(map); //zmiana Liked not yet na no
+                         if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).exists()) { //za
+                             if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("yes")) {//jeżeli ten user polajkował zalogowanego usera, to
+                                 matchesList.add(snapshot.getKey()); //dodajemy go do listy matchy
+                                 Map<String, Object> map = new HashMap<String, Object>();
+                                 map.put("Matched", "yes");
+                                 dbHelper.getCurrentUserReference().child("Connections").child(snapshot.getKey()).updateChildren(map); //zmiana Liked not yet na yes
+                             } else if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("no")) {
+                                 Map<String, Object> map = new HashMap<String, Object>();
+                                 map.put("Matched", "no");
+                                 dbHelper.getCurrentUserReference().child("Connections").child(snapshot.getKey()).updateChildren(map); //zmiana Liked not yet na no
+                             }
                          }
                      }
                  }
