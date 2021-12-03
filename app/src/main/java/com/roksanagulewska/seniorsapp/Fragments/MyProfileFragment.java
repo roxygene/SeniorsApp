@@ -1,14 +1,25 @@
 package com.roksanagulewska.seniorsapp.Fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.slider.Slider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
+import com.roksanagulewska.seniorsapp.DataBase.User;
 import com.roksanagulewska.seniorsapp.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +27,16 @@ import com.roksanagulewska.seniorsapp.R;
  * create an instance of this fragment.
  */
 public class MyProfileFragment extends Fragment {
+
+    ImageView imageView;
+    TextView nameTxt, localisationTxt, ageTxt, descriptionTxt;
+    DataBaseHelper dbHelper = new DataBaseHelper();
+    String currentUserName;
+    String currentUserLocalisation;
+    String currentUserAge;
+    String currentUserDescription;
+    String currentUserImageName;
+    String currentUserImageUri;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,14 +77,67 @@ public class MyProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        Log.d("MYPROF", "my profileOnCreate");
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_my_profile, container, false);
+
         Log.d("MYPROF", "my profileONCRV");
-        return inflater.inflate(R.layout.fragment_my_profile, container, false);
+
+        imageView = rootView.findViewById(R.id.usersImage);
+        nameTxt = rootView.findViewById(R.id.usersName);
+        localisationTxt = rootView.findViewById(R.id.usersLocalisation);
+        ageTxt = rootView.findViewById(R.id.usersAge);
+        descriptionTxt = rootView.findViewById(R.id.usersDescription);
+
+        ValueEventListener currentUsersDataValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                currentUserName  = snapshot.child("name").getValue().toString();
+                currentUserLocalisation = snapshot.child("localisation").getValue().toString();
+                currentUserAge = snapshot.child("age").getValue().toString();
+                currentUserDescription = snapshot.child("description").getValue().toString();
+                currentUserImageName = snapshot.child("mainPictureName").getValue().toString();
+                currentUserImageUri = snapshot.child("imageUri").getValue().toString();
+
+                displayCurrentUsersInfo();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        dbHelper.getCurrentUserReference().addValueEventListener(currentUsersDataValueEventListener);
+
+
+        return rootView;
+    }
+
+    private void displayCurrentUsersInfo() {
+        if (currentUserImageName.length() > 27) {
+            Picasso.get()
+                    .load(currentUserImageUri)
+                    .fit()
+                    .centerCrop()
+                    .rotate(90) //jeżeli to zdjęce wykonane aparatem to obróć o 90 stopni
+                    .into(imageView);
+
+        } else {
+            Picasso.get()
+                    .load(currentUserImageUri)
+                    .fit()
+                    .centerCrop()
+                    .into(imageView);
+        }
+        nameTxt.setText(currentUserName);
+        localisationTxt.setText(currentUserLocalisation);
+        ageTxt.setText(currentUserAge);
+        descriptionTxt.setText(currentUserDescription);
     }
 }

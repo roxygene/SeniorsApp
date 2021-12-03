@@ -38,7 +38,11 @@
     <string name="profile_info6">Show upload</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="my_profile1">name</string>
+    <string name="my_profile2">localisation</string>
+    <string name="my_profile3">age</string>
+    <string name="my_profile4">description</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -195,7 +195,6 @@ public class FindNewFriendsFragment extends Fragment {
 
         checkUsersPreferences();
         listPotentialMatches();
-        //dbHelper.addPotentialMatchesToDb(potentialMatchesList);
 
     }
 

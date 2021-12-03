@@ -32,11 +32,10 @@ public class MessagesFragment extends Fragment {
 
     DataBaseHelper dbHelper = new DataBaseHelper();
     List<String> potentialMatchesList = new ArrayList<>(); //lista użytkowników z tabeli Connections zalogowanego użytkownika
-    List<String> matchesList = new ArrayList<>();
+    List<String> matchesList = new ArrayList<>(); //lista użytkowników z którymi zalogowany użytkownik został sparowany
     List<User> friendsList = new ArrayList<>();
     List<ItemMatchModel> friendsListToDisplay = new ArrayList<>();
     User user;
-    boolean isAMatch = false;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,15 +94,11 @@ public class MessagesFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) { //dla każdego id usera z tabeli Connections
                     String potentialFriend = snapshot.getKey(); //pobieram to id i zapisuję w zmiennej
-                    Log.d("MATCHX", potentialFriend + " id frienda"); //testowe, do wywalenia
-                    Log.d("MATCHX", snapshot.child("Liked").getValue().toString());
-                    if(snapshot.child("Liked").getValue().toString().equals("yes")) {
+                    if(snapshot.child("Liked").getValue().toString().equals("yes")) { //sprawdzam czy zalogowany użytkownik polajkował tego usera
                         Log.d("MATCHX", "L: yes");
-                        potentialMatchesList.add(potentialFriend);
-                    } else if (snapshot.child("Liked").getValue().toString().equals("no")){
+                        potentialMatchesList.add(potentialFriend);//jeśli tak to dodaję jego id do potentialMatchesList
+                    } else if (snapshot.child("Liked").getValue().toString().equals("no")) { //jeśli nie to nie robię nic
                         Log.d("MATCHX", "L: no");
-                    } else {
-                        Log.d("MATCHX", "nie weszło");
                     }
                 }
 
@@ -112,7 +107,7 @@ public class MessagesFragment extends Fragment {
                     Log.d("MATCHX", "PotMatList: " + element);
                 }
 
-                listMatches();
+                listMatches(potentialMatchesList); //wywołuję metodę która wypełnia listę matchy i zmienia status Matched u zalogowanego użytkownika
             }
 
             @Override
@@ -122,32 +117,31 @@ public class MessagesFragment extends Fragment {
         };
         dbHelper.getCurrentUserReference().child("Connections").addValueEventListener(checkLikesValueEventListener); //ustawienie listenera
     }
-     private void listMatches() {
-         matchesList.clear();
-         Log.d("MATCHX", "jestem w list matches");
-         Log.d("MATCHX", "rozmiar potentialMatchesList: " + potentialMatchesList.size());
+     private void listMatches(List<String> list) {
          ValueEventListener checkIfMatchValueEventListener = new ValueEventListener() { //utworzenie listenera
              @Override
              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                 Log.d("MATCHX", "jestem w onDataChange checkIfaMatch");
-                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                     if(potentialMatchesList.contains(snapshot.getKey())) {
-                         if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("yes")) {
-                             Log.d("MATCHX", "jestem w if checkIfaMatch YES");
-                             matchesList.add(snapshot.getKey());
+                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) { //dla każdego usera
+                     if(potentialMatchesList.contains(snapshot.getKey())) { //sprawdzenie czy user jest na liście potentialMatchesList i jeśli tak
+                         if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("yes")) {//jeżeli ten user polajkował zalogowanego usera, to
+                             matchesList.add(snapshot.getKey()); //dodajemy go do listy matchy
                              Map<String, Object> map = new HashMap<String, Object>();
                              map.put("Matched", "yes");
                              dbHelper.getCurrentUserReference().child("Connections").child(snapshot.getKey()).updateChildren(map); //zmiana Liked not yet na yes
                          } else if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("no")) {
-                             Log.d("MATCHX", "jestem w if checkIfaMatch NO");
                              Map<String, Object> map = new HashMap<String, Object>();
                              map.put("Matched", "no");
                              dbHelper.getCurrentUserReference().child("Connections").child(snapshot.getKey()).updateChildren(map); //zmiana Liked not yet na no
-                         } else {
-                             Log.d("MATCHX", "no nie weszło niestety");
                          }
                      }
                  }
+
+                 //testowe wyświetlenie listy par zalogowanego użytkownika
+                 for (String element : matchesList) {
+                     Log.d("MATCHX", "MatList: " + element);
+                 }
+
+                 generateListOfFriends(matchesList);
              }
 
              @Override
@@ -158,21 +152,6 @@ public class MessagesFragment extends Fragment {
 
          dbHelper.getDatabaseReference().child("Users").addValueEventListener(checkIfMatchValueEventListener);
 
-
-         /*for(String element : potentialMatchesList) {
-             dbHelper.getDatabaseReference().child("Users").child(element).child("Connections").addValueEventListener(checkIfMatchValueEventListener);
-             Log.d("MATCHX", "jestem w for");
-             if(isAMatch == true) {
-                 Log.d("MATCHX", "jestem w if is a match true");
-                 matchesList.add(element);
-                 Map<String, Object> map = new HashMap<String, Object>();
-                 map.put("Matched", "yes");
-                 dbHelper.getCurrentUserReference().child("Connections").child(element).updateChildren(map); //zmiana Liked not yet na yes
-                 //dbHelper.getDatabaseReference().child("Users").child(element).child("Connections").child(dbHelper.getCurrentUserId()).updateChildren(map);
-             }
-             isAMatch = false;
-         }*/
-
          for (String match : matchesList) {
              Log.d("MATCHX", "matchesList: " + match);
          }
@@ -180,8 +159,7 @@ public class MessagesFragment extends Fragment {
 
 
     //ta metoda ma tworzyć listę userów pasujących do tych z listy matchesList
-    private void generateListOfFriends() {
-        friendsList.clear();
+    private void generateListOfFriends(List<String> list) {
 
         ValueEventListener isAMatchValueEventListener = new ValueEventListener() {
             @Override

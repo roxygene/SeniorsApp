@@ -21,9 +21,9 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
     private List<ItemModel> items; //lista elementów wyświetlanych przez adapter
 
-    public CardStackAdapter(List<ItemModel> items) {
+    public CardStackAdapter(List<ItemModel> items) { //konstruktor klasy CardStackAdapter
         this.items = items;
-    } //konstruktor klasy CardStackAdapter
+    }
 
     @NonNull
     @Override
@@ -46,13 +46,14 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
-        TextView name, age, localisation;
+        TextView name, age, localisation, description;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.item_image);
             name = itemView.findViewById(R.id.item_name);
             age = itemView.findViewById(R.id.item_age);
             localisation = itemView.findViewById(R.id.item_city);
+            description = itemView.findViewById(R.id.item_description);
         }
 
         void setData(ItemModel data) {
@@ -63,19 +64,17 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
                         .centerCrop()
                         .rotate(90) //jeżeli to zdjęce wykonane aparatem to obróć o 90 stopni
                         .into(image);
-                name.setText(data.getName()); //wyświetlenie imienia
-                age.setText(String.valueOf(data.getAge())); //wieku
-                localisation.setText(data.getLocalisation()); //i lokalizacji
             } else {
                 Picasso.get()
                         .load(data.getImageUri())
                         .fit()
                         .centerCrop()
                         .into(image);
-                name.setText(data.getName());
-                age.setText(String.valueOf(data.getAge()));
-                localisation.setText(data.getLocalisation());
             }
+            name.setText(data.getName());
+            age.setText(String.valueOf(data.getAge()));
+            localisation.setText(data.getLocalisation());
+            description.setText(data.getDescription());
         }
     }
 
