@@ -6,23 +6,22 @@ import android.net.Uri;
 public class User {
     private String userId;
     private String email;
-    private String password; //konto
+    private String password;
     private String name;
     private int age = 0;
     private String sex;
-    private String localisation; //profile
-    private String preferredSex; //profile
-    private String description; //profile
-    private String mainPictureName; //profile
+    private String localisation;
+    private String preferredSex;
+    private String description;
+    private String mainPictureName;
     private String imageUri;
-    private int minPrefAge = 0; //profile
-    private int maxPrefAge = 0; //profile
+    private int minPrefAge = 0;
+    private int maxPrefAge = 0;
     //dodać walidację do setterów
 
-    public User() {
+    public User() { //pusty konstruktor
 
     }
-
 
     public User(String userId, String email, String password, String name, int age, String sex, String localisation, String preferredSex, String description, String mainPictureName, String imageUri, int minPrefAge, int maxPrefAge) {
         this.userId = userId;

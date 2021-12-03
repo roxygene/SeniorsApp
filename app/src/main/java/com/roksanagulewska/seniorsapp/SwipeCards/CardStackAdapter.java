@@ -19,13 +19,11 @@ import java.util.List;
 
 public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.ViewHolder> {
 
-    private List<ItemModel> items;
-    private DataBaseHelper dbHelper = new DataBaseHelper();
-    //ItemModel currentItem;
+    private List<ItemModel> items; //lista elementów wyświetlanych przez adapter
 
     public CardStackAdapter(List<ItemModel> items) {
         this.items = items;
-    }
+    } //konstruktor klasy CardStackAdapter
 
     @NonNull
     @Override
@@ -44,7 +42,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
     @Override
     public int getItemCount() {
         return items.size();
-    }
+    } //metoda sprawdzająca ilość elementów do wyświetlenia
 
     class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
@@ -59,15 +57,15 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
         void setData(ItemModel data) {
             if (data.getImageName().length() > 27) {
-                Picasso.get()
+                Picasso.get()//wyświetlanie obrazu za pomocą biblioteki Picasso
                         .load(data.getImageUri())
                         .fit()
                         .centerCrop()
-                        .rotate(90)
+                        .rotate(90) //jeżeli to zdjęce wykonane aparatem to obróć o 90 stopni
                         .into(image);
-                name.setText(data.getName());
-                age.setText(String.valueOf(data.getAge()));
-                localisation.setText(data.getLocalisation());
+                name.setText(data.getName()); //wyświetlenie imienia
+                age.setText(String.valueOf(data.getAge())); //wieku
+                localisation.setText(data.getLocalisation()); //i lokalizacji
             } else {
                 Picasso.get()
                         .load(data.getImageUri())

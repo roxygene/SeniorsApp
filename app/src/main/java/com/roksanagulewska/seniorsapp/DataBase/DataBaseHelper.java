@@ -36,79 +36,41 @@ import static android.content.ContentValues.TAG;
 
 public class DataBaseHelper {
 
-    private FirebaseDatabase db = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = db.getReference();
-    private String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    private DatabaseReference currentUserReference = databaseReference.child("Users").child(getCurrentUserId());
+    private FirebaseDatabase db = FirebaseDatabase.getInstance(); //instancja bazy danych
+    private DatabaseReference databaseReference = db.getReference(); //referencja do bazy danych
+    private String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid(); //id aktualnie zalogowanego użytkownika
+    private DatabaseReference currentUserReference = databaseReference.child("Users").child(getCurrentUserId()); //referencja do aktualnie zalogowanego użytkownika
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference(); //referencja do firebase storage
 
-
-    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-
-    private List<String> returnedList = new ArrayList<>(); //get i set
-
-    public DataBaseHelper() {
+    public DataBaseHelper() { //pusty konstruktor
     }
 
-    public Task<Void> addUserToDB(User user) {
+    public Task<Void> addUserToDB(User user) { //stworzenie użytkownika w bazie danych z wartościami tokimi jak pola przyjętego w parametrze obiektu user
         return databaseReference.child("Users").child(currentUserId).setValue(user);
     }
 
-    public void addPotentialMatchesToDb(List<User> potentialMatchesList) {
+    public void addPotentialMatchesToDb(List<User> potentialMatchesList) {//dodanie potencjalnych par do tabeli Connections aktualnie zalogowanego użytkownika
         for (User element : potentialMatchesList) {
-            //if (!(databaseReference.child("Users").child(currentUserId).child("Connections").child(element.getUserId())) {
-                currentUserReference.child("Connections").child(element.getUserId()).child("Liked").setValue("not yet");
-                currentUserReference.child("Connections").child(element.getUserId()).child("Matched").setValue("no yet");
-            //}
+            currentUserReference.child("Connections").child(element.getUserId()).child("Liked").setValue("not yet");
+            currentUserReference.child("Connections").child(element.getUserId()).child("Matched").setValue("not yet");
+
         }
     }
 
-
-
     public StorageReference getStorageReference() {
         return storageReference;
-    }
-
-    public void setStorageReference(StorageReference storageReference) {
-        this.storageReference = storageReference;
-    }
-
-    public FirebaseDatabase getDb() {
-        return db;
-    }
-
-    public void setDb(FirebaseDatabase db) {
-        this.db = db;
     }
 
     public DatabaseReference getDatabaseReference() {
         return databaseReference;
     }
 
-    public void setDatabaseReference(DatabaseReference databaseReference) {
-        this.databaseReference = databaseReference;
-    }
-
     public String getCurrentUserId() {
         return currentUserId;
-    }
-
-    public void setCurrentUserId(String currentUserId) {
-        this.currentUserId = currentUserId;
     }
 
     public DatabaseReference getCurrentUserReference() {
         return currentUserReference;
     }
 
-    public void setCurrentUserReference(DatabaseReference currentUserReference) {
-        this.currentUserReference = currentUserReference;
-    }
-
-    public List<String> getReturnedList() {
-        return returnedList;
-    }
-
-    public void setReturnedList(List<String> returnedList) {
-        this.returnedList = returnedList;
-    }
 }

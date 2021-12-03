@@ -19,7 +19,9 @@ import com.roksanagulewska.seniorsapp.R;
 import com.roksanagulewska.seniorsapp.SwipeCards.ItemMatchModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +31,7 @@ import java.util.List;
 public class MessagesFragment extends Fragment {
 
     DataBaseHelper dbHelper = new DataBaseHelper();
-    List<String> potentialMatchesList = new ArrayList<>();
+    List<String> potentialMatchesList = new ArrayList<>(); //lista użytkowników z tabeli Connections zalogowanego użytkownika
     List<String> matchesList = new ArrayList<>();
     List<User> friendsList = new ArrayList<>();
     List<ItemMatchModel> friendsListToDisplay = new ArrayList<>();
@@ -75,7 +77,7 @@ public class MessagesFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        loadMatches();
+        listLikedUsers();
     }
 
     @Nullable
@@ -86,95 +88,31 @@ public class MessagesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_messages, container, false);
     }
 
-
-    /*public void checkUsersPreferences() {
-        ValueEventListener checkPreferencesValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                prefferedSex = dataSnapshot.child("preferredSex").getValue().toString();
-                minPrefAge = Integer.parseInt(dataSnapshot.child("minPrefAge").getValue().toString());
-                maxPrefAge = Integer.parseInt(dataSnapshot.child("maxPrefAge").getValue().toString());
-
-                Log.d("PREF", "SEX: " + prefferedSex);
-                Log.d("PREF", "MINage: " + minPrefAge);
-                Log.d("PREF", "MAXage: " + maxPrefAge);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("READ_PREFERENCES_ERROR", "Failed to read preferences values.", error.toException());
-            }
-        };
-
-        dbHelper.getCurrentUserReference().addValueEventListener(checkPreferencesValueEventListener);
-
-    }*/
-
-    /*public void listPotentialMatches() {
-        potentialMatchesList.clear();
-        ValueEventListener listPotentialMatchesValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    Log.d("PREF", "sexP" + prefferedSex);
-                    Log.d("PREF", "sexUS " + user.getSex());
-                    Log.d("PREF", "ageUS" + user.getAge());
-
-                        if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
-                            if (user.getAge() <= maxPrefAge && user.getAge() >= minPrefAge) { //sprawdzenie dopasowania wieku
-                                if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {//sprawdzenie czy użytkownik nie będzie wyświetlał sam siebie
-                                    if(dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").hasChild(user.getUserId())) { //sprawdzenie czyistnieje już taka pozycja w tabeli connections, aby nie nadpisywać danych
-                                        Log.d("OMG", "yes " + user.getUserId());
-                                    } else {
-                                        Log.d("OMG", "no " + user.getUserId());
-                                        potentialMatchesList.add(user);
-                                    }
-                                }
-                            }
-                        }
-
-                    Log.d("PREF", "jestem w pętli" + user.getEmail());
-                }
-
-                for (User element : potentialMatchesList) {
-                    Log.d("PREF_USER", element.getEmail());
-                }
-
-                if (isFirstTime) {
-                    generateListOfMatches();
-                    isFirstTime = false;
-                }
-                //adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("READ_POTENTIAL_MATCHES_ERROR", "Failed to read values.", error.toException());
-            }
-        };
-
-        dbHelper.getDatabaseReference().child("Users").addValueEventListener(listPotentialMatchesValueEventListener);
-
-    }*/
-
-    public void loadMatches() {
-        matchesList.clear();
+    public void listLikedUsers() {
         potentialMatchesList.clear();
         ValueEventListener checkLikesValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String potentialFriend = dataSnapshot.getKey();
-                    Log.d("MATCH", potentialFriend + " id frienda");
-                    if(snapshot.child("Liked").getValue() == "yes") {
-                        Log.d("MATCH", "L: yes");
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) { //dla każdego id usera z tabeli Connections
+                    String potentialFriend = snapshot.getKey(); //pobieram to id i zapisuję w zmiennej
+                    Log.d("MATCHX", potentialFriend + " id frienda"); //testowe, do wywalenia
+                    Log.d("MATCHX", snapshot.child("Liked").getValue().toString());
+                    if(snapshot.child("Liked").getValue().toString().equals("yes")) {
+                        Log.d("MATCHX", "L: yes");
                         potentialMatchesList.add(potentialFriend);
+                    } else if (snapshot.child("Liked").getValue().toString().equals("no")){
+                        Log.d("MATCHX", "L: no");
                     } else {
-                        Log.d("MATCH", "L: no");
+                        Log.d("MATCHX", "nie weszło");
                     }
                 }
+
+                //testowe wyświetlenie listy polajkowanych osób
+                for (String element : potentialMatchesList) {
+                    Log.d("MATCHX", "PotMatList: " + element);
+                }
+
+                listMatches();
             }
 
             @Override
@@ -182,44 +120,63 @@ public class MessagesFragment extends Fragment {
                 Log.w("READ_LIKES_ERROR", "Failed to read preferences values.", error.toException());
             }
         };
-
-        ValueEventListener checkIfMatchValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("Liked").getValue() == "yes") {
-                    isAMatch = true;
-                    //matchesList.add(element);
-                }
-
-                /*for(String element : potentialMatchesList) {
-                    if(dataSnapshot.child(element).child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue() == "yes") {
-                        dbHelper.getDatabaseReference().child("Users").child(dbHelper.getCurrentUserId()).child("Connections").child(element).child("Matched").setValue("yes");
-                        matchesList.add(element);
-                    }
-                }*/
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-
-        dbHelper.getCurrentUserReference().child("Connections").addValueEventListener(checkLikesValueEventListener);
-
-        for(String element : potentialMatchesList) {
-            dbHelper.getDatabaseReference().child("Users").child(element).child("Connections").child(dbHelper.getCurrentUserId()).addValueEventListener(checkIfMatchValueEventListener);
-            if(isAMatch == true) {
-                matchesList.add(element);
-            }
-            isAMatch = false;
-        }
-
-        for (String match : matchesList) {
-            Log.d("MATCHX", "matchesList: " + match);
-        }
+        dbHelper.getCurrentUserReference().child("Connections").addValueEventListener(checkLikesValueEventListener); //ustawienie listenera
     }
+     private void listMatches() {
+         matchesList.clear();
+         Log.d("MATCHX", "jestem w list matches");
+         Log.d("MATCHX", "rozmiar potentialMatchesList: " + potentialMatchesList.size());
+         ValueEventListener checkIfMatchValueEventListener = new ValueEventListener() { //utworzenie listenera
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 Log.d("MATCHX", "jestem w onDataChange checkIfaMatch");
+                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                     if(potentialMatchesList.contains(snapshot.getKey())) {
+                         if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("yes")) {
+                             Log.d("MATCHX", "jestem w if checkIfaMatch YES");
+                             matchesList.add(snapshot.getKey());
+                             Map<String, Object> map = new HashMap<String, Object>();
+                             map.put("Matched", "yes");
+                             dbHelper.getCurrentUserReference().child("Connections").child(snapshot.getKey()).updateChildren(map); //zmiana Liked not yet na yes
+                         } else if (snapshot.child("Connections").child(dbHelper.getCurrentUserId()).child("Liked").getValue().toString().equals("no")) {
+                             Log.d("MATCHX", "jestem w if checkIfaMatch NO");
+                             Map<String, Object> map = new HashMap<String, Object>();
+                             map.put("Matched", "no");
+                             dbHelper.getCurrentUserReference().child("Connections").child(snapshot.getKey()).updateChildren(map); //zmiana Liked not yet na no
+                         } else {
+                             Log.d("MATCHX", "no nie weszło niestety");
+                         }
+                     }
+                 }
+             }
+
+             @Override
+             public void onCancelled(@NonNull DatabaseError error) {
+
+             }
+         };
+
+         dbHelper.getDatabaseReference().child("Users").addValueEventListener(checkIfMatchValueEventListener);
+
+
+         /*for(String element : potentialMatchesList) {
+             dbHelper.getDatabaseReference().child("Users").child(element).child("Connections").addValueEventListener(checkIfMatchValueEventListener);
+             Log.d("MATCHX", "jestem w for");
+             if(isAMatch == true) {
+                 Log.d("MATCHX", "jestem w if is a match true");
+                 matchesList.add(element);
+                 Map<String, Object> map = new HashMap<String, Object>();
+                 map.put("Matched", "yes");
+                 dbHelper.getCurrentUserReference().child("Connections").child(element).updateChildren(map); //zmiana Liked not yet na yes
+                 //dbHelper.getDatabaseReference().child("Users").child(element).child("Connections").child(dbHelper.getCurrentUserId()).updateChildren(map);
+             }
+             isAMatch = false;
+         }*/
+
+         for (String match : matchesList) {
+             Log.d("MATCHX", "matchesList: " + match);
+         }
+     }
 
 
     //ta metoda ma tworzyć listę userów pasujących do tych z listy matchesList

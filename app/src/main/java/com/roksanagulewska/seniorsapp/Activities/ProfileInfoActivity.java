@@ -10,14 +10,11 @@ import androidx.core.content.FileProvider;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -25,22 +22,15 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.DataBase.User;
 import com.roksanagulewska.seniorsapp.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +40,7 @@ import java.util.Date;
 public class ProfileInfoActivity extends AppCompatActivity {
 
     public static final int CAMERA_REQUEST_CODE = 99;
-    public static final int CAMERA_PERM_CODE = 100; //camera permission code
+    public static final int CAMERA_PERMISSION_CODE = 100; //camera permission code
     public static final int GALLERY_REQUEST_CODE = 101;
 
 
@@ -94,34 +84,43 @@ public class ProfileInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 askCameraPermission();
-            }
+            } // prośba o dostęp do aparatu
         });
 
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+                startActivityForResult(gallery, GALLERY_REQUEST_CODE); //otwarcie galerii
             }
         });
 
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String description = descriptionEditTxt.getText().toString().trim();
+                String description = descriptionEditTxt.getText().toString().trim(); //pobranie wpisanego przez użytkownika opisu
 
-                user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, fileName, imageUri, minAge, maxAge);
-                dbHelper.addUserToDB(user).addOnSuccessListener(success->
-                {
-                    Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
-                }).addOnFailureListener(error->
-                {
-                    Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                if (description.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Description is required", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (description.length() > 250) {
+                        Toast.makeText(getApplicationContext(), "Description is too long.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, fileName, imageUri, minAge, maxAge);
+                        //utworzenie obiektu user z wczytanymi z bundle'a i wprowadzonymi w tej aktywności wartościami pól
+                        dbHelper.addUserToDB(user).addOnSuccessListener(success-> //wywołanie metody dodającej użytkownika do bazy ze sprawdzeniem czy się udało
+                        {
+                            Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
+                        }).addOnFailureListener(error->
+                        {
+                            Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
 
-                Intent navIntent = new Intent(getApplicationContext(), NavigationActivity.class);
-                startActivity(navIntent);
-                finish();
+                        Intent navIntent = new Intent(getApplicationContext(), NavigationActivity.class);
+                        startActivity(navIntent);
+                        finish();
+                    }
+                }
 
             }
         });
@@ -130,7 +129,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
     //zapytanie o pozwolenie na dostęp do aparatu
     private void askCameraPermission() {
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
         } else {
                 dispatchTakePictureIntent();
         }
@@ -139,7 +138,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
     //sprawdzenie pozwolenia
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_PERM_CODE) {
+        if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakePictureIntent();
             } else {
@@ -178,12 +177,14 @@ public class ProfileInfoActivity extends AppCompatActivity {
         }
     }
 
+    //pozyskanie rozszerzenia pliku
     private String getFileExt(Uri contentUri) {
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(c.getType(contentUri));
     }
 
+    //utworzenie pliku obrazu
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -197,7 +198,6 @@ public class ProfileInfoActivity extends AppCompatActivity {
 
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }

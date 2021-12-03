@@ -20,8 +20,8 @@ public class PreferencesActivity extends AppCompatActivity {
     CheckBox femalesCB, malesCB;
     EditText minAgeEditTxt, maxAgeEditTxt;
     Button confirmPrefBtn;
-    int minAge = 0;
-    int maxAge = 0;
+    int minAge;
+    int maxAge;
     String preferredSex;
 
 
@@ -49,37 +49,48 @@ public class PreferencesActivity extends AppCompatActivity {
         confirmPrefBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                minAge = Integer.parseInt(minAgeEditTxt.getText().toString().trim());
-                maxAge = Integer.parseInt(maxAgeEditTxt.getText().toString().trim());
 
+                try {
+                    minAge = Integer.parseInt(minAgeEditTxt.getText().toString().trim());
+                    maxAge = Integer.parseInt(maxAgeEditTxt.getText().toString().trim());
+                } catch (NumberFormatException exception) { //jeżeli wpisany text nie będzie liczbą, zostanie wyrzucony wyjątek
+                    if (age != 0) {
+                        Toast.makeText(getApplicationContext(), "Incorrect age format.", Toast.LENGTH_LONG).show(); //komunikat informujący o wyrzuceniu wyjątku
+                    }
+                }
 
-                if ((!femalesCB.isChecked() && !malesCB.isChecked()) || minAge == 0 || maxAge == 0)
+                if ((!femalesCB.isChecked() && !malesCB.isChecked()) || minAgeEditTxt.getText().toString().isEmpty() || maxAgeEditTxt.getText().toString().isEmpty())
                 {
                     Toast.makeText(getApplicationContext(), "Please add all required information.", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    if (femalesCB.isChecked() && malesCB.isChecked()) {
-                        preferredSex = "both";
-                    }else if (femalesCB.isChecked() && !malesCB.isChecked()) {
-                        preferredSex = "female";
+                    if (minAge < 18 || maxAge < 18 || minAge > 130 || maxAge > 130) {
+                        Toast.makeText(getApplicationContext(), "Insert correct age, it must be greater or equal to 18.", Toast.LENGTH_SHORT).show();
                     } else {
-                        preferredSex = "male";
+                        if (femalesCB.isChecked() && malesCB.isChecked()) { // sprawdzenie zaznaczenia checkboxów
+                            preferredSex = "both";
+                        }else if (femalesCB.isChecked() && !malesCB.isChecked()) {
+                            preferredSex = "female";
+                        } else {
+                            preferredSex = "male";
+                        }
+
+                        Intent prefIntent = new Intent(getApplicationContext(), ProfileInfoActivity.class);
+                        Bundle prefBundle =  new Bundle();
+                        prefBundle.putString("email", email);
+                        prefBundle.putString("password", password);
+                        prefBundle.putString("name", name);
+                        prefBundle.putString("localisation", localisation);
+                        prefBundle.putInt("age", age);
+                        prefBundle.putString("sex", sex);
+                        prefBundle.putString("preferredSex", preferredSex);
+                        prefBundle.putInt("minAge", minAge);
+                        prefBundle.putInt("maxAge", maxAge);
+                        prefIntent.putExtras(prefBundle);
+                        startActivity(prefIntent);
+                        finish();
                     }
 
-                    Intent prefIntent = new Intent(getApplicationContext(), ProfileInfoActivity.class);
-                    Bundle prefBundle =  new Bundle();
-                    prefBundle.putString("email", email);
-                    prefBundle.putString("password", password);
-                    prefBundle.putString("name", name);
-                    prefBundle.putString("localisation", localisation);
-                    prefBundle.putInt("age", age);
-                    prefBundle.putString("sex", sex);
-                    prefBundle.putString("preferredSex", preferredSex);
-                    prefBundle.putInt("minAge", minAge);
-                    prefBundle.putInt("maxAge", maxAge);
-                    prefIntent.putExtras(prefBundle);
-                    startActivity(prefIntent);
-                    finish();
                 }
 
             }
