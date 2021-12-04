@@ -24,8 +24,8 @@
     <string name="preferences3">Females</string>
     <string name="preferences4">Males</string>
     <string name="preferences5">Age range:</string>
-    <string name="preferences6">Min age:</string>
-    <string name="preferences7">Max age:</string>
+    <string name="preferences6">Minimum age:</string>
+    <string name="preferences7">Maximum age:</string>
     <string name="internet1">OOPS!</string>
     <string name="internetL2">"No Internet Connection! You can't sign in!"</string>
     <string name="internetR2">"No Internet Connection! You can't sign up!"</string>
@@ -35,7 +35,12 @@
     <string name="profile_info3">choose from gallery</string>
     <string name="profile_info4">About me</string>
     <string name="profile_info5">Write here your short description.</string>
-    <string name="profile_info6">Show upload</string>
+    <string name="profile_info6">Description:</string>
+    <string name="profile_info7">Preferred sex:</string>
+    <string name="profile_info8">Minimum age:</string>
+    <string name="profile_info9">Maximum age:</string>
+    <string name="settings1">delete account</string>
+    <string name="settings2">confirm changes</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="my_profile1">name</string>

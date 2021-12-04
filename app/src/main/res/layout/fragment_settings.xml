@@ -1,15 +1,277 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.SettingsFragment"
-    android:background="@color/color3">
+    android:background="@color/white">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="40dp">
+
+            <ImageView
+                android:id="@+id/usersImage"
+                android:layout_width="260dp"
+                android:layout_height="260dp"
+                android:src="@drawable/starting_avatar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/cameraButton"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button6"
+                android:fontFamily="sans-serif-medium"
+                android:includeFontPadding="false"
+                android:text="@string/profile_info2"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/color3"
+                android:textSize="24dp"
+                app:backgroundTint="@null"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/usersImage" />
+
+            <Button
+                android:id="@+id/galleryButton"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button6"
+                android:fontFamily="sans-serif-medium"
+                android:includeFontPadding="false"
+                android:text="@string/profile_info3"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/color3"
+                android:textSize="24dp"
+                app:backgroundTint="@null"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cameraButton" />
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/users_info2"
+                android:textColor="@color/gray"
+                android:textSize="28dp"
+                app:layout_constraintTop_toBottomOf="@+id/galleryButton"
+                tools:layout_editor_absoluteX="25dp" />
+
+            <EditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/color2"
+                android:fontFamily="sans-serif-medium"
+                android:textAlignment="center"
+                android:textColor="@color/color2"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/textViewName"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <TextView
+                android:id="@+id/localisationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/users_info3"
+                android:textColor="@color/gray"
+                android:textSize="28dp"
+                app:layout_constraintTop_toBottomOf="@+id/nameEditText"
+                tools:layout_editor_absoluteX="30dp" />
+
+            <EditText
+                android:id="@+id/localisationEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/color2"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/color2"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/localisationTextView"
+                tools:layout_editor_absoluteX="47dp" />
+
+            <TextView
+                android:id="@+id/ageTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/users_info4"
+                android:textColor="@color/gray"
+                android:textSize="28dp"
+                app:layout_constraintTop_toBottomOf="@+id/localisationEditText"
+                tools:layout_editor_absoluteX="103dp" />
+
+            <EditText
+                android:id="@+id/ageEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:backgroundTint="@color/color2"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/color2"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/ageTextView"
+                tools:layout_editor_absoluteX="47dp" />
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/profile_info6"
+                android:textColor="@color/gray"
+                android:textSize="28dp"
+                app:layout_constraintTop_toBottomOf="@+id/ageEditText"
+                tools:layout_editor_absoluteX="30dp" />
+
+            <EditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/color2"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/color2"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <TextView
+                android:id="@+id/preferredSexTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/profile_info7"
+                android:textColor="@color/gray"
+                android:textSize="28dp"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionEditText"
+                tools:layout_editor_absoluteX="30dp" />
+
+            <EditText
+                android:id="@+id/preferredSexEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/color2"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/color2"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/preferredSexTextView"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <TextView
+                android:id="@+id/minAgeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/profile_info8"
+                android:textColor="@color/gray"
+                android:textSize="28dp"
+                app:layout_constraintTop_toBottomOf="@+id/preferredSexEditText"
+                tools:layout_editor_absoluteX="30dp" />
+
+            <EditText
+                android:id="@+id/minAgeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/color2"
+                android:fontFamily="sans-serif-medium"
+                android:textAlignment="center"
+                android:textColor="@color/color2"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/minAgeTextView"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <TextView
+                android:id="@+id/maxAgeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/profile_info6"
+                android:textColor="@color/gray"
+                android:textSize="28dp"
+                app:layout_constraintTop_toBottomOf="@+id/minAgeEditText"
+                tools:layout_editor_absoluteX="30dp" />
+
+            <EditText
+                android:id="@+id/maxAgeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:backgroundTint="@color/color2"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/color2"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/maxAgeTextView"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <Button
+                android:id="@+id/confirmBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/settings2"
+                android:textAlignment="center"
+                android:background="@drawable/button1"
+                app:backgroundTint="@null"
+                android:textColor="@color/white"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/maxAgeEditText"
+                tools:layout_editor_absoluteX="40dp" />
+
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/settings1"
+                android:textAlignment="center"
+                android:background="@drawable/button_delete"
+                app:backgroundTint="@null"
+                android:textColor="@color/color5"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/confirmBtn"
+                tools:layout_editor_absoluteX="40dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        
+    </ScrollView>
 
 </FrameLayout>
