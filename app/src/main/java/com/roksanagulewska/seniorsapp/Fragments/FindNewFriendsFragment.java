@@ -47,8 +47,8 @@ import java.util.Map;
 public class FindNewFriendsFragment extends Fragment {
 
     DataBaseHelper dbHelper = new DataBaseHelper();
-    int minPrefAge;
-    int maxPrefAge;
+    String minPrefAge;
+    String maxPrefAge;
     String prefferedSex;
     List<User> potentialMatchesList = new ArrayList<>(); //lista id użytkowników pasujących do kryteriów zalogowanego użytkownika
     List<ItemModel> items = new ArrayList<>(); //lista obiektów czytanych przez adapter
@@ -212,8 +212,8 @@ public class FindNewFriendsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //w przypadku dodania lub zmiany w bazie danych
                 prefferedSex = dataSnapshot.child("preferredSex").getValue().toString(); //przypisanie zmiennej preferowanej płci zalogowanego użytkownika
-                minPrefAge = Integer.parseInt(dataSnapshot.child("minPrefAge").getValue().toString()); //przypisanie zmiennej preferowanego minimalnego wieku zalogowanego użytkownika
-                maxPrefAge = Integer.parseInt(dataSnapshot.child("maxPrefAge").getValue().toString()); //przypisanie zmiennej preferowanego maksymalnego wieku zalogowanego użytkownika
+                minPrefAge = dataSnapshot.child("minPrefAge").getValue().toString(); //przypisanie zmiennej preferowanego minimalnego wieku zalogowanego użytkownika
+                maxPrefAge = dataSnapshot.child("maxPrefAge").getValue().toString(); //przypisanie zmiennej preferowanego maksymalnego wieku zalogowanego użytkownika
 
                 //wypisania kontrolne, do wywalenia
                 Log.d("PREF", "SEX: " + prefferedSex);
@@ -246,7 +246,7 @@ public class FindNewFriendsFragment extends Fragment {
                     Log.d("PREF", "ageU " + user.getAge());
 
                         if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
-                            if (user.getAge() <= maxPrefAge && user.getAge() >= minPrefAge) { //sprawdzenie dopasowania wieku
+                            if (Integer.parseInt(user.getAge()) <= Integer.parseInt(maxPrefAge) && Integer.parseInt(user.getAge()) >= Integer.parseInt(minPrefAge)) { //sprawdzenie dopasowania wieku
                                 if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {//sprawdzenie czy użytkownik nie będzie wyświetlał sam siebie
                                     if(dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").hasChild(user.getUserId())) { //sprawdzenie czyistnieje już taka pozycja w tabeli connections, aby nie nadpisywać danych
                                         Log.d("OMG", "yes " + user.getUserId());

@@ -56,6 +56,10 @@ public class ProfileInfoActivity extends AppCompatActivity {
     Button cameraBtn, galleryBtn, confirmBtn;
     EditText descriptionEditTxt;
 
+    String userAge;
+    String userMinAge;
+    String userMaxAge;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +82,6 @@ public class ProfileInfoActivity extends AppCompatActivity {
         String preferredSex = prefBundle.getString("preferredSex");
         int minAge = prefBundle.getInt("minAge");
         int maxAge = prefBundle.getInt("maxAge");
-
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +109,10 @@ public class ProfileInfoActivity extends AppCompatActivity {
                     if (description.length() > 250) {
                         Toast.makeText(getApplicationContext(), "Description is too long.", Toast.LENGTH_SHORT).show();
                     } else {
-                        user = new User(dbHelper.getCurrentUserId(), email, password, name, age, sex, localisation, preferredSex, description, fileName, imageUri, minAge, maxAge);
+                        userAge = Integer.toString(age);
+                        userMinAge = Integer.toString(minAge);
+                        userMaxAge = Integer.toString(maxAge);
+                        user = new User(dbHelper.getCurrentUserId(), email, password, name, userAge, sex, localisation, preferredSex, description, fileName, imageUri, userMinAge, userMaxAge);
                         //utworzenie obiektu user z wczytanymi z bundle'a i wprowadzonymi w tej aktywności wartościami pól
                         dbHelper.addUserToDB(user).addOnSuccessListener(success-> //wywołanie metody dodającej użytkownika do bazy ze sprawdzeniem czy się udało
                         {
@@ -227,7 +233,6 @@ public class ProfileInfoActivity extends AppCompatActivity {
     public void uploadImageToFirebase(String fileName, Uri contentUri) {
         StorageReference imageStorageReference = dbHelper.getStorageReference().child("Pictures").child(fileName);
 
-        //if (contentUri != null) {
             imageStorageReference.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -248,9 +253,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Upload failed!", Toast.LENGTH_SHORT);
                 }
             });
-        //} else {
-          //  Toast.makeText(getApplicationContext(), "No file selected", Toast.LENGTH_SHORT);
-        //}
+
 
 
     }

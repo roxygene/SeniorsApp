@@ -5,7 +5,7 @@ import android.net.Uri;
 public class ItemModel {
     private String email;
     private String name;
-    private int age;
+    private String age;
     private String localisation;
     private String imageName;
     private String imageUri;
@@ -16,7 +16,7 @@ public class ItemModel {
     public ItemModel() {
     }
 
-    public ItemModel(String email, String userId, String name, int age, String localisation, String imageName, String imageUri, String description) {
+    public ItemModel(String email, String userId, String name, String age, String localisation, String imageName, String imageUri, String description) {
         this.email = email;
         this.userId = userId;
         this.name = name;
@@ -67,11 +67,11 @@ public class ItemModel {
         this.name = name;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 

@@ -8,22 +8,22 @@ public class User {
     private String email;
     private String password;
     private String name;
-    private int age = 0;
+    private String age;
     private String sex;
     private String localisation;
     private String preferredSex;
     private String description;
     private String mainPictureName;
     private String imageUri;
-    private int minPrefAge = 0;
-    private int maxPrefAge = 0;
+    private String minPrefAge;
+    private String maxPrefAge;
     //dodać walidację do setterów
 
     public User() { //pusty konstruktor
 
     }
 
-    public User(String userId, String email, String password, String name, int age, String sex, String localisation, String preferredSex, String description, String mainPictureName, String imageUri, int minPrefAge, int maxPrefAge) {
+    public User(String userId, String email, String password, String name, String age, String sex, String localisation, String preferredSex, String description, String mainPictureName, String imageUri, String minPrefAge, String maxPrefAge) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -79,11 +79,11 @@ public class User {
         this.name = name;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
@@ -127,19 +127,19 @@ public class User {
         this.mainPictureName = mainPictureName;
     }
 
-    public int getMinPrefAge() {
+    public String getMinPrefAge() {
         return minPrefAge;
     }
 
-    public void setMinPrefAge(int minPrefAge) {
+    public void setMinPrefAge(String minPrefAge) {
         this.minPrefAge = minPrefAge;
     }
 
-    public int getMaxPrefAge() {
+    public String getMaxPrefAge() {
         return maxPrefAge;
     }
 
-    public void setMaxPrefAge(int maxPrefAge) {
+    public void setMaxPrefAge(String maxPrefAge) {
         this.maxPrefAge = maxPrefAge;
     }
 }
