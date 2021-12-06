@@ -176,18 +176,33 @@
                 app:layout_constraintTop_toBottomOf="@+id/descriptionEditText"
                 tools:layout_editor_absoluteX="30dp" />
 
-            <EditText
-                android:id="@+id/preferredSexEditText"
-                android:layout_width="match_parent"
+            <CheckBox
+                android:id="@+id/femalesCheckBox"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="5dp"
-                android:backgroundTint="@color/color2"
-                android:textAlignment="center"
+                android:buttonTint="@color/color2"
                 android:fontFamily="sans-serif-medium"
-                android:textColor="@color/color2"
+                android:text="@string/preferences3"
+                android:textColor="@color/color3"
                 android:textSize="30dp"
-                app:layout_constraintTop_toBottomOf="@+id/preferredSexTextView"
-                tools:layout_editor_absoluteX="16dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/preferredSexTextView" />
+
+            <CheckBox
+                android:id="@+id/malesCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:buttonTint="@color/color2"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/preferences4"
+                android:textColor="@color/color3"
+                android:textSize="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/femalesCheckBox" />
 
             <TextView
                 android:id="@+id/minAgeTextView"
@@ -198,8 +213,8 @@
                 android:text="@string/profile_info8"
                 android:textColor="@color/gray"
                 android:textSize="28dp"
-                app:layout_constraintTop_toBottomOf="@+id/preferredSexEditText"
-                tools:layout_editor_absoluteX="30dp" />
+                app:layout_constraintTop_toBottomOf="@+id/malesCheckBox"
+                tools:layout_editor_absoluteX="40dp" />
 
             <EditText
                 android:id="@+id/minAgeEditText"
@@ -220,7 +235,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="@string/profile_info6"
+                android:text="@string/profile_info9"
                 android:textColor="@color/gray"
                 android:textSize="28dp"
                 app:layout_constraintTop_toBottomOf="@+id/minAgeEditText"
