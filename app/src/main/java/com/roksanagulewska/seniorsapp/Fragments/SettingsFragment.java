@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,9 @@ import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SettingsFragment#newInstance} factory method to
@@ -29,8 +33,7 @@ import com.squareup.picasso.Picasso;
  */
 public class SettingsFragment extends Fragment {
 
-    ImageView pictureView;
-    Button cameraBtn, galleryBtn, confirmBtn, deleteAccountBtn;
+    Button confirmBtn, deleteAccountBtn;
     EditText nameTxt, localisationTxt, ageTxt, descriptionTxt, minAgeTxt, maxAgeTxt;
     CheckBox femalesCB, malesCB;
 
@@ -40,11 +43,10 @@ public class SettingsFragment extends Fragment {
     String currentUserLocalisation;
     String currentUserAge;
     String currentUserDescription;
-    String currentUserImageName;
-    String currentUserImageUri;
     String currentUserPreferredSex;
     String currentUserMinPrefAge;
     String currentUserMaxPrefAge;
+    int age, minAge, maxAge;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -94,9 +96,6 @@ public class SettingsFragment extends Fragment {
 
         Log.d("SETTX", "jestem w oCV");
 
-        pictureView = rootView.findViewById(R.id.usersImage);
-        cameraBtn = rootView.findViewById(R.id.cameraButton);
-        galleryBtn = rootView.findViewById(R.id.galleryButton);
         nameTxt = rootView.findViewById(R.id.nameEditText);
         localisationTxt = rootView.findViewById(R.id.localisationEditText);
         ageTxt = rootView.findViewById(R.id.ageEditText);
@@ -115,8 +114,6 @@ public class SettingsFragment extends Fragment {
                 currentUserLocalisation = snapshot.child("localisation").getValue().toString();
                 currentUserAge = snapshot.child("age").getValue().toString();
                 currentUserDescription = snapshot.child("description").getValue().toString();
-                currentUserImageName = snapshot.child("mainPictureName").getValue().toString();
-                currentUserImageUri = snapshot.child("imageUri").getValue().toString();
                 currentUserPreferredSex = snapshot.child("preferredSex").getValue().toString();
                 currentUserMinPrefAge = snapshot.child("minPrefAge").getValue().toString();
                 currentUserMaxPrefAge = snapshot.child("maxPrefAge").getValue().toString();
@@ -135,6 +132,14 @@ public class SettingsFragment extends Fragment {
 
         dbHelper.getCurrentUserReference().addValueEventListener(currentUsersDataValueEventListener);
 
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loadNewData()) {
+                    addNewDataToDataBase();
+                }
+            }
+        });
         return rootView;
     }
 
@@ -142,21 +147,6 @@ public class SettingsFragment extends Fragment {
 
         Log.d("SETTX", "jestem w display");
 
-        if (currentUserImageName.length() > 27) {
-            Picasso.get()
-                    .load(currentUserImageUri)
-                    .fit()
-                    .centerCrop()
-                    .rotate(90) //jeżeli to zdjęce wykonane aparatem to obróć o 90 stopni
-                    .into(pictureView);
-
-        } else {
-            Picasso.get()
-                    .load(currentUserImageUri)
-                    .fit()
-                    .centerCrop()
-                    .into(pictureView);
-        }
         nameTxt.setText(currentUserName);
         localisationTxt.setText(currentUserLocalisation);
         ageTxt.setText(currentUserAge);
@@ -174,5 +164,78 @@ public class SettingsFragment extends Fragment {
             femalesCB.setChecked(false);
             malesCB.setChecked(true);
         }
+    }
+
+    private boolean loadNewData() {
+        currentUserName  = nameTxt.getText().toString().trim();
+        currentUserLocalisation = localisationTxt.getText().toString().trim();
+        currentUserAge = ageTxt.getText().toString().trim();
+        currentUserDescription = descriptionTxt.getText().toString().trim();
+        currentUserMinPrefAge = minAgeTxt.getText().toString().trim();
+        currentUserMaxPrefAge = maxAgeTxt.getText().toString().trim();
+
+        if(femalesCB.isChecked() && malesCB.isChecked()) {
+            currentUserPreferredSex = "both";
+        } else if(femalesCB.isChecked()) {
+            currentUserPreferredSex = "female";
+        } else if(malesCB.isChecked()) {
+            currentUserPreferredSex = "male";
+        }
+
+        try {
+            age = Integer.parseInt(currentUserAge); //przypisanie zmiennej age wartości wpisanej w pole ageEditText
+            minAge = Integer.parseInt(currentUserMinPrefAge);
+            maxAge = Integer.parseInt(currentUserMaxPrefAge);
+        } catch (NumberFormatException exception) { //jeżeli wpisany text nie będzie liczbą, zostanie wyrzucony wyjątek
+            if (age != 0 || minAge != 0 || maxAge != 0) {
+                Toast.makeText(getContext(), "Incorrect age format.", Toast.LENGTH_LONG).show(); //komunikat informujący o wyrzuceniu wyjątku
+            }
+        }
+
+        if (currentUserName.isEmpty() || currentUserLocalisation.isEmpty() || currentUserAge.isEmpty() || currentUserDescription.isEmpty() || currentUserMinPrefAge.isEmpty() || currentUserMaxPrefAge.isEmpty() || (!malesCB.isChecked() && !femalesCB.isChecked())) { //sprawdzenie czy wszystkie pola zostały uzupełnione
+            Toast.makeText(getContext(), "Please add all required information.", Toast.LENGTH_SHORT).show(); //jeśli nie, wyświetlany jest komunikat
+        } else {
+            if (containsLettersOnly(currentUserName) && containsLettersOnly(currentUserLocalisation)) { //sprawdzenie czy do pól localisation zostały wprowadzone łańcuchy znaków zawierające tylko litery
+                if (age >= 130 || age < 18 || minAge >= 130 || minAge < 18 || maxAge >= 130 || maxAge < 18 || (minAge >= maxAge)) { //sprawdzenie czy podany wiek jest ralistyczny i zgodny z przeznaczeniem aplikacji
+                    Toast.makeText(getContext(), "Insert correct age, it must be greater or equal to 18.", Toast.LENGTH_LONG).show();
+                } else { //jeżeli wszystkie powyższe warunki mają odpowiednie wartości
+
+                    currentUserName = currentUserName.substring(0, 1).toUpperCase() + currentUserName.substring(1).toLowerCase(); //formatowanie imienia tak aby zaczynało się od wielkiej litery
+                    currentUserLocalisation = currentUserLocalisation.substring(0, 1).toUpperCase() + currentUserLocalisation.substring(1).toLowerCase(); //formatowanie miasta tak aby zaczynało się od wielkiej litery
+                    return true;
+                }
+            } else { //jeśli localisation i name składają się z innych znaków niż litery
+                Toast.makeText(getContext(), "Name and localisation must contain only letters.", Toast.LENGTH_LONG).show();
+            }
+        }
+        return false;
+    }
+
+    private void addNewDataToDataBase() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("name", currentUserName);
+        map.put("localisation", currentUserLocalisation);
+        map.put("age", currentUserAge);
+        map.put("description", currentUserDescription);
+        map.put("preferredSex", currentUserPreferredSex);
+        map.put("minPrefAge", currentUserMinPrefAge);
+        map.put("maxPrefAge", currentUserMaxPrefAge);
+        dbHelper.getCurrentUserReference().updateChildren(map);
+        Toast.makeText(getContext(), "Data updated", Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean containsLettersOnly(String text) {
+        char[] textCharacters = text.toCharArray();
+        boolean isIt = true;
+
+        for (char character : textCharacters) {
+            if (!Character.isLetter(character)) {
+                Log.d("VALID", character + " is NOT letter");
+                isIt = false;
+                return isIt;
+            }
+            Log.d("VALID", character + " is letter");
+        }
+        return isIt;
     }
 }
