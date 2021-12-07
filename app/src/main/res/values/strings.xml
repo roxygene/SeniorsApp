@@ -47,6 +47,10 @@
     <string name="my_profile2">localisation</string>
     <string name="my_profile3">age</string>
     <string name="my_profile4">description</string>
+    <string name="delete1">Are you sure you want to delete your account?</string>
+    <string name="delete2">yes</string>
+    <string name="delete3">no</string>
+
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
