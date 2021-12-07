@@ -146,6 +146,7 @@ public class SettingsFragment extends Fragment {
         deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("DELETEX", "Naciśnięto delete");
                 Intent intent = new Intent(getContext(), DeleteAccountActivity.class);
                 startActivity(intent);
 

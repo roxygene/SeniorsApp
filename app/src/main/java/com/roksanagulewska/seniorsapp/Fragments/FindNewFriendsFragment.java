@@ -97,13 +97,6 @@ public class FindNewFriendsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        /*checkUsersPreferences();
-        listPotentialMatches();*/
-
-        //dbHelper.getCurrentUserReference().child("Connections1");
-        //dbHelper.getDatabaseReference().child("testowy1");
-
     }
 
     @Override

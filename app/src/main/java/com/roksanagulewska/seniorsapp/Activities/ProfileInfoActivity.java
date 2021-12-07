@@ -45,7 +45,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
 
 
     private Uri contentUri;
-    private String imageUri;
+    String imageUri;
     String imageUrl;
     DataBaseHelper dbHelper = new DataBaseHelper();
     User user;
@@ -167,7 +167,6 @@ public class ProfileInfoActivity extends AppCompatActivity {
                 this.sendBroadcast(mediaScanIntent);
                 fileName = file.getName();
                 uploadImageToFirebase(file.getName(), contentUri);
-                //imageUri = data.getData();
             }
         }else if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -178,7 +177,6 @@ public class ProfileInfoActivity extends AppCompatActivity {
                 mainPicture.setImageURI(contentUri);
                 fileName = imageFileName;
                 uploadImageToFirebase(imageFileName, contentUri);
-                //imageUri = data.getData();
             }
         }
     }
