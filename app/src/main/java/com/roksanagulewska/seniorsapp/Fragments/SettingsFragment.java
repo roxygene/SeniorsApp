@@ -112,17 +112,19 @@ public class SettingsFragment extends Fragment {
         ValueEventListener currentUsersDataValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                currentUserName  = snapshot.child("name").getValue().toString();
-                currentUserLocalisation = snapshot.child("localisation").getValue().toString();
-                currentUserAge = snapshot.child("age").getValue().toString();
-                currentUserDescription = snapshot.child("description").getValue().toString();
-                currentUserPreferredSex = snapshot.child("preferredSex").getValue().toString();
-                currentUserMinPrefAge = snapshot.child("minPrefAge").getValue().toString();
-                currentUserMaxPrefAge = snapshot.child("maxPrefAge").getValue().toString();
+                if(snapshot.hasChildren()) {
+                    currentUserName  = snapshot.child("name").getValue().toString();
+                    currentUserLocalisation = snapshot.child("localisation").getValue().toString();
+                    currentUserAge = snapshot.child("age").getValue().toString();
+                    currentUserDescription = snapshot.child("description").getValue().toString();
+                    currentUserPreferredSex = snapshot.child("preferredSex").getValue().toString();
+                    currentUserMinPrefAge = snapshot.child("minPrefAge").getValue().toString();
+                    currentUserMaxPrefAge = snapshot.child("maxPrefAge").getValue().toString();
 
-                Log.d("SETTX", currentUserMinPrefAge);
+                    Log.d("SETTX", currentUserMinPrefAge);
 
-                displayCurrentUsersInfo();
+                    displayCurrentUsersInfo();
+                }
 
             }
 

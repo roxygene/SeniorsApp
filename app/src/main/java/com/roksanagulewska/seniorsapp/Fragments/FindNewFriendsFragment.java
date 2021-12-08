@@ -204,15 +204,16 @@ public class FindNewFriendsFragment extends Fragment {
         ValueEventListener checkPreferencesValueEventListener = new ValueEventListener() { //utworzenie listenera
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //w przypadku dodania lub zmiany w bazie danych
-                prefferedSex = dataSnapshot.child("preferredSex").getValue().toString(); //przypisanie zmiennej preferowanej płci zalogowanego użytkownika
-                minPrefAge = dataSnapshot.child("minPrefAge").getValue().toString(); //przypisanie zmiennej preferowanego minimalnego wieku zalogowanego użytkownika
-                maxPrefAge = dataSnapshot.child("maxPrefAge").getValue().toString(); //przypisanie zmiennej preferowanego maksymalnego wieku zalogowanego użytkownika
+                if(dataSnapshot.hasChildren()) {
+                    prefferedSex = dataSnapshot.child("preferredSex").getValue().toString(); //przypisanie zmiennej preferowanej płci zalogowanego użytkownika
+                    minPrefAge = dataSnapshot.child("minPrefAge").getValue().toString(); //przypisanie zmiennej preferowanego minimalnego wieku zalogowanego użytkownika
+                    maxPrefAge = dataSnapshot.child("maxPrefAge").getValue().toString(); //przypisanie zmiennej preferowanego maksymalnego wieku zalogowanego użytkownika
 
-                //wypisania kontrolne, do wywalenia
-                Log.d("PREF", "SEX: " + prefferedSex);
-                Log.d("PREF", "MINage: " + minPrefAge);
-                Log.d("PREF", "MAXage: " + maxPrefAge);
-
+                    //wypisania kontrolne, do wywalenia
+                    Log.d("PREF", "SEX: " + prefferedSex);
+                    Log.d("PREF", "MINage: " + minPrefAge);
+                    Log.d("PREF", "MAXage: " + maxPrefAge);
+                }
             }
 
             @Override

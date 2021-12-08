@@ -97,14 +97,16 @@ public class MyProfileFragment extends Fragment {
         ValueEventListener currentUsersDataValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                currentUserName  = snapshot.child("name").getValue().toString();
-                currentUserLocalisation = snapshot.child("localisation").getValue().toString();
-                currentUserAge = snapshot.child("age").getValue().toString();
-                currentUserDescription = snapshot.child("description").getValue().toString();
-                currentUserImageName = snapshot.child("mainPictureName").getValue().toString();
-                currentUserImageUri = snapshot.child("imageUri").getValue().toString();
+                if(snapshot.hasChildren()) {
+                    currentUserName = snapshot.child("name").getValue().toString();
+                    currentUserLocalisation = snapshot.child("localisation").getValue().toString();
+                    currentUserAge = snapshot.child("age").getValue().toString();
+                    currentUserDescription = snapshot.child("description").getValue().toString();
+                    currentUserImageName = snapshot.child("mainPictureName").getValue().toString();
+                    currentUserImageUri = snapshot.child("imageUri").getValue().toString();
 
-                displayCurrentUsersInfo();
+                    displayCurrentUsersInfo();
+                }
             }
 
             @Override

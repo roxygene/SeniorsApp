@@ -30,7 +30,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     private Toolbar toolbar;
     private DrawerLayout drawer;
     NavigationView navigationView;
-    DataBaseHelper dbHelper = new DataBaseHelper();
+
 
 
 

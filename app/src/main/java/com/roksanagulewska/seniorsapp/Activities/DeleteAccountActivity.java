@@ -71,51 +71,48 @@ public class DeleteAccountActivity extends AppCompatActivity {
 
     private void deleteCurrentUserAccount() {
         Log.d("DELETEX", "w deleteCurrUser...");
-        currentUserReference.addValueEventListener( new ValueEventListener() {
+        currentUserReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                imageUri = snapshot.child("imageUri").getValue().toString();
-                imageStorageReference = firebaseStorage.getReferenceFromUrl(imageUri);
-                Log.d("DELETEX", "Jestem w onDataChange");
+                if(snapshot.hasChildren()) {
+                    imageUri = snapshot.child("imageUri").getValue().toString();
+                    imageStorageReference = firebaseStorage.getReferenceFromUrl(imageUri);
+                    Log.d("DELETEX", "Jestem w onDataChange");
 
-                currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("DELETEX", "User deleted.");
-                            Intent intent = new Intent(getApplicationContext(), StartingActivity.class);
-                            Log.d("DELETEX", "intencja");
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
 
-                /*imageStorageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("DELETEX", "Image deleted.");
-                        currentUserReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d("DELETEX", "User data deleted.");
-                                currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("DELETEX", "User deleted.");
-                                            Toast.makeText(getApplicationContext(), "User account deleted.", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    imageStorageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("DELETEX", "Image deleted.");
+
+                            currentUserReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("DELETEX", "Users data deleted.");
+
+                                    currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d("DELETEX", "User deleted.");
+
+                                                Intent intent = new Intent(getApplicationContext(), StartingActivity.class);
+                                                Log.d("DELETEX", "intencja");
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(intent);
+                                                finish();
+
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            }
                                         }
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });*/
+                                    });
+                                }
+                            });
+                        }
+
+                    });
+                }
             }
 
             /**
