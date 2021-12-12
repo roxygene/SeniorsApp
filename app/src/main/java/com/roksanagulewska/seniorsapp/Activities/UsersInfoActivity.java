@@ -23,6 +23,7 @@ public class UsersInfoActivity extends AppCompatActivity {
     Button confirmInfoBtn;
     String sex = "female"; //domyślna płeć to kobieta, ponieważ taką wartość reprezentuje switch w swoim położeniu startowym
     int age; // ustawiam wartość początkową wieku na 0, aby upewnić się że użytkownik wprowadził jakąś wartość
+    boolean ageFormat;
 
 
     @Override
@@ -60,45 +61,49 @@ public class UsersInfoActivity extends AppCompatActivity {
 
                 String name = nameEditTxt.getText().toString().trim(); //przypisywanie zmiennej name, tekstu wpisanego w pole nameEditText, trim() pozbywa się białych znaków z początku i końca łańcucha
                 String localisation = localisationEditTxt.getText().toString().trim(); //przypisywanie zmiennej localisation, tekstu wpisanego w pole nameEditText, trim() pozbywa się białych znaków z początku i końca łańcucha
-
+                ageFormat = true;
 
                 try {
                     age = Integer.parseInt(ageEditTxt.getText().toString().trim()); //przypisanie zmiennej age wartości wpisanej w pole ageEditText
                 } catch (NumberFormatException exception) { //jeżeli wpisany text nie będzie liczbą, zostanie wyrzucony wyjątek
                     if (age != 0) {
-                        Toast.makeText(getApplicationContext(), "Incorrect age format.", Toast.LENGTH_LONG).show(); //komunikat informujący o wyrzuceniu wyjątku
+                        ageFormat = false;
                     }
                 }
 
+                if (ageFormat) {
+                    if (name.isEmpty() || localisation.isEmpty() || ageEditTxt.getText().toString().isEmpty()) { //sprawdzenie czy wszystkie pola zostały uzupełnione
+                        Toast.makeText(getApplicationContext(), "Please add all required information.", Toast.LENGTH_SHORT).show(); //jeśli nie, wyświetlany jest komunikat
+                    } else {
+                        if (containsLettersOnly(name) && containsLettersOnly(localisation)) { //sprawdzenie czy do pól localisation zostały wprowadzone łańcuchy znaków zawierające tylko litery
+                            if (age >= 130 || age < 18) { //sprawdzenie czy podany wiek jest ralistyczny i zgodny z przeznaczeniem aplikacji
+                                Toast.makeText(getApplicationContext(), "Insert correct age, it must be greater or equal to 18.", Toast.LENGTH_LONG).show();
+                            } else { //jeżeli wszystkie powyższe warunki mają odpowiednie wartości
 
-                if (name.isEmpty() || localisation.isEmpty() || ageEditTxt.getText().toString().isEmpty()) { //sprawdzenie czy wszystkie pola zostały uzupełnione
-                    Toast.makeText(getApplicationContext(), "Please add all required information.", Toast.LENGTH_SHORT).show(); //jeśli nie, wyświetlany jest komunikat
-                } else {
-                    if (containsLettersOnly(name) && containsLettersOnly(localisation)) { //sprawdzenie czy do pól localisation zostały wprowadzone łańcuchy znaków zawierające tylko litery
-                        if (age >= 130 || age < 18) { //sprawdzenie czy podany wiek jest ralistyczny i zgodny z przeznaczeniem aplikacji
-                            Toast.makeText(getApplicationContext(), "Insert correct age, it must be greater or equal to 18.", Toast.LENGTH_LONG).show();
-                        } else { //jeżeli wszystkie powyższe warunki mają odpowiednie wartości
+                                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase(); //formatowanie imienia tak aby zaczynało się od wielkiej litery
+                                localisation = localisation.substring(0, 1).toUpperCase() + localisation.substring(1).toLowerCase(); //formatowanie miasta tak aby zaczynało się od wielkiej litery
 
-                            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase(); //formatowanie imienia tak aby zaczynało się od wielkiej litery
-                            localisation = localisation.substring(0, 1).toUpperCase() + localisation.substring(1).toLowerCase(); //formatowanie miasta tak aby zaczynało się od wielkiej litery
+                                Intent infoIntent = new Intent(getApplicationContext(), PreferencesActivity.class);
+                                Bundle infoBundle = new Bundle();
+                                infoBundle.putString("email", email);
+                                infoBundle.putString("password", password);
+                                infoBundle.putString("name", name);
+                                infoBundle.putString("localisation", localisation);
+                                infoBundle.putInt("age", age);
+                                infoBundle.putString("sex", sex);
+                                infoIntent.putExtras(infoBundle); //przyłączanie bundla z danymi wprowadzonymi przez użytkownika do intencji
+                                startActivity(infoIntent);
+                                finish();
 
-                            Intent infoIntent = new Intent(getApplicationContext(), PreferencesActivity.class);
-                            Bundle infoBundle = new Bundle();
-                            infoBundle.putString("email", email);
-                            infoBundle.putString("password", password);
-                            infoBundle.putString("name", name);
-                            infoBundle.putString("localisation", localisation);
-                            infoBundle.putInt("age", age);
-                            infoBundle.putString("sex", sex);
-                            infoIntent.putExtras(infoBundle); //przyłączanie bundla z danymi wprowadzonymi przez użytkownika do intencji
-                            startActivity(infoIntent);
-                            finish();
-
+                            }
+                        } else { //jeśli localisation i name składają się z innych znaków niż litery
+                            Toast.makeText(getApplicationContext(), "Name and localisation must contain only letters.", Toast.LENGTH_LONG).show();
                         }
-                    } else { //jeśli localisation i name składają się z innych znaków niż litery
-                        Toast.makeText(getApplicationContext(), "Name and localisation must contain only letters.", Toast.LENGTH_LONG).show();
                     }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Incorrect age format.", Toast.LENGTH_LONG).show(); //komunikat informujący o wyrzuceniu wyjątku
                 }
+
             }
         });
     }
@@ -118,4 +123,5 @@ public class UsersInfoActivity extends AppCompatActivity {
         }
         return isIt;
     }
+
 }

@@ -18,6 +18,7 @@
         <activity android:name=".Activities.DeleteAccountActivity"></activity>
         <activity android:name=".Activities.ProfileInfoActivity" />
         <activity android:name=".Activities.LoginInternetAccessActivity" />
+        <activity android:name=".Activities.RegisterInternetAccessActivity" />
         <activity android:name=".Activities.PreferencesActivity" />
         <activity android:name=".Activities.UsersInfoActivity" />
         <activity android:name=".Activities.LogInActivity" />
