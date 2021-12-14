@@ -51,6 +51,7 @@ public class FindNewFriendsFragment extends Fragment {
     String maxPrefAge;
     String prefferedSex;
     List<User> potentialMatchesList = new ArrayList<>(); //lista id użytkowników pasujących do kryteriów zalogowanego użytkownika
+    List<User> potentialMatchesList2 = new ArrayList<>(); //lista id użytkowników pasujących do kryteriów zalogowanego użytkownika
     List<ItemModel> items = new ArrayList<>(); //lista obiektów czytanych przez adapter
     boolean isFirstTime = true; //flaga sprawdzająca czy addMatchesToDb zostało już raz wykonane
 
@@ -227,72 +228,37 @@ public class FindNewFriendsFragment extends Fragment {
     }
 
     public void listPotentialMatches() { //dodawanie użytkowników spełniających wymagania aktualnie zalogowanego użytkownika do listy
+
         ValueEventListener listPotentialMatchesValueEventListener = new ValueEventListener() { //utworzenie listenera
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) { //dla każdego użytkownika w Users
                     User user = snapshot.getValue(User.class); //tworzy obiekt użytkownika którego wartości pól są danymi pobranymi z bazy
-                    //wypisania kontrolne, do wywalenia
-
-                    Log.d("PREF2", "nameU " + user.getName());
-                    Log.d("PREF2", "sexU " + user.getSex());
-                    Log.d("PREF2", "ageU " + user.getAge());
-
                     if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
-                        Log.d("PREF2", "nameU1sex " + user.getName());
-                        Log.d("PREF2", "sexU1 " + user.getSex());
-                        Log.d("PREF2", "ageU1 " + user.getAge());
                         if (Integer.parseInt(user.getAge()) <= Integer.parseInt(maxPrefAge) && Integer.parseInt(user.getAge()) >= Integer.parseInt(minPrefAge)) { //sprawdzenie dopasowania wieku
-                            Log.d("PREF2", "nameU2age " + user.getName());
-                            Log.d("PREF2", "sexU2 " + user.getSex());
-                            Log.d("PREF2", "ageU2 " + user.getAge());
                             if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {//sprawdzenie czy użytkownik nie będzie wyświetlał sam siebie
-                                //if (isFirstTime) { //wykorzystanie flagi w celu sprawdzenia czy nie nadpiszemy listy
-                                    potentialMatchesList.add(user);
-                                //}
-
-
-
-                                    /*if(dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").hasChild(user.getUserId())) { //sprawdzenie czy istnieje już taka pozycja w tabeli connections, aby nie nadpisywać danych
-                                        Log.d("OMG", "yes " + user.getUserId());
-                                    } else {
-                                        Log.d("OMG", "no " + user.getUserId());
-                                        potentialMatchesList.add(user); //dodanie obiektu użytkownika spełniającego wymagania do listy potentialMatchesList
-                                    }*/
+                                potentialMatchesList.add(user);
                             }
                         }
                     }
-
                 }
 
-
-
-
-
-
-                /*if (isFirstTime) { //wykorzystanie flagi w celu sprawdzenia czy nie nadpiszemy listy
-                    //wypisanie kontrolne, do wywalenia
-                    for (User element : potentialMatchesList) {
-                        Log.d("PREF_USER", element.getEmail());
-                        dbHelper.getCurrentUserReference().child("Connections").child(element.getUserId()).child("Liked").setValue("not yet");
-                        dbHelper.getCurrentUserReference().child("Connections").child(element.getUserId()).child("Matched").setValue("not yet");
-                    }
-                    addList();
-                    isFirstTime = false;
-                }*/
                 if (isFirstTime) { //wykorzystanie flagi w celu sprawdzenia czy nie nadpiszemy listy
                     isFirstTime = false;
                     for (User element : potentialMatchesList) {
                         Log.d("PREF3", element.getName());
                         if (dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").hasChild(element.getUserId())) {
-                            Log.d("PREFF", "Takie connections już istnieje!" + potentialMatchesList.size());
+                            Log.d("PREFF", "Takie connections już istnieje! " + potentialMatchesList.size()); //wyświetlanie kontrolne, do wywalenia
+                            if (dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").child(element.getUserId()).child("Liked").getValue().equals("not yet")) {
+                                potentialMatchesList2.add(element);
+                            }
                         } else {
                             dbHelper.getCurrentUserReference().child("Connections").child(element.getUserId()).child("Liked").setValue("not yet");
                             dbHelper.getCurrentUserReference().child("Connections").child(element.getUserId()).child("Matched").setValue("not yet");
                             Log.d("PREFF", "ListaMatches w if: " + potentialMatchesList.size()); //wyświetlanie kontrolne, do wywalenia
+                            potentialMatchesList2.add(element);
                         }
                     }
-
                     addList();
                 }
                 adapter.notifyDataSetChanged();//aktualizacja danych na adapterze
@@ -311,8 +277,9 @@ public class FindNewFriendsFragment extends Fragment {
     private void addList() { //metoda tworzy obiekt item dla każdego użytkownika z listy potentialMatchesList
         items.clear();
         Log.d("PREFL", "ListaMatches: " + potentialMatchesList.size()); //wyświetlanie kontrolne, do wywalenia
+        Log.d("PREFL", "ListaMatches2: " + potentialMatchesList2.size()); //wyświetlanie kontrolne, do wywalenia
 
-        for (User potentialMatch : potentialMatchesList) {
+        for (User potentialMatch : potentialMatchesList2) {
             /*ValueEventListener displayPotentialMatchValueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
