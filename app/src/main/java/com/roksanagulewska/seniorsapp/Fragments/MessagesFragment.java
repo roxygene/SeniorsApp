@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.DataBase.User;
@@ -32,9 +33,9 @@ public class MessagesFragment extends Fragment {
 
     DataBaseHelper dbHelper = new DataBaseHelper();
     List<String> potentialMatchesList = new ArrayList<>(); //lista użytkowników z tabeli Connections zalogowanego użytkownika
-    List<String> matchesList = new ArrayList<>(); //lista użytkowników z którymi zalogowany użytkownik został sparowany
-    List<User> friendsList = new ArrayList<>();
-    List<ItemMatchModel> friendsListToDisplay = new ArrayList<>();
+    List<String> matchesList = new ArrayList<>(); //lista użytkowników z którymi zalogowany użytkownik został sparowany, z tego robimy tabelę matches
+    List<User> friendsList = new ArrayList<>(); //z tabeli matches wyciągamy wszystkie id i dodajemy do tej listy
+    List<ItemMatchModel> friendsListToDisplay = new ArrayList<>(); //lista tych item modeli do wyświetlania
     User user;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -139,11 +140,12 @@ public class MessagesFragment extends Fragment {
                  }
 
                  //testowe wyświetlenie listy par zalogowanego użytkownika
-                 for (String element : matchesList) {
-                     Log.d("MATCHX", "MatList: " + element);
+                 for (String match : matchesList) {
+                     Log.d("MATCHX", "matchesList: " + match);
+                     //dbHelper.getCurrentUserReference().child("Matches").child(match).setValue("yes");
                  }
 
-                 generateListOfFriends(matchesList);
+                 generateListOfFriends();
              }
 
              @Override
@@ -154,19 +156,19 @@ public class MessagesFragment extends Fragment {
 
          dbHelper.getDatabaseReference().child("Users").addValueEventListener(checkIfMatchValueEventListener);
 
-         for (String match : matchesList) {
-             Log.d("MATCHX", "matchesList: " + match);
-         }
+
      }
 
 
-    //ta metoda ma tworzyć listę userów pasujących do tych z listy matchesList
-    private void generateListOfFriends(List<String> list) {
+    //ta metoda ma tworzyć listę userów pasujących do tych zapisanych w bazie w tabeli matches zalogowanego usera
+    private void generateListOfFriends() {
 
         ValueEventListener isAMatchValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                if (snapshot.hasChildren()) {
+                    //for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                }
             }
 
             @Override
@@ -175,7 +177,7 @@ public class MessagesFragment extends Fragment {
             }
         };
 
-        dbHelper.getDatabaseReference().child("Users").addValueEventListener(isAMatchValueEventListener);
+        dbHelper.getDatabaseReference().child("Users").child(dbHelper.getCurrentUserId()).child("Matches").addValueEventListener(isAMatchValueEventListener);
     }
 
     //metoda przekształcająca userów w itemMatchModel

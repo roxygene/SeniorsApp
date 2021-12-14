@@ -210,9 +210,9 @@ public class FindNewFriendsFragment extends Fragment {
                     maxPrefAge = dataSnapshot.child("maxPrefAge").getValue().toString(); //przypisanie zmiennej preferowanego maksymalnego wieku zalogowanego użytkownika
 
                     //wypisania kontrolne, do wywalenia
-                    Log.d("PREF", "SEX: " + prefferedSex);
-                    Log.d("PREF", "MINage: " + minPrefAge);
-                    Log.d("PREF", "MAXage: " + maxPrefAge);
+                    Log.d("PREF1", "SEX: " + prefferedSex);
+                    Log.d("PREF1", "MINage: " + minPrefAge);
+                    Log.d("PREF1", "MAXage: " + maxPrefAge);
                 }
             }
 
@@ -227,41 +227,73 @@ public class FindNewFriendsFragment extends Fragment {
     }
 
     public void listPotentialMatches() { //dodawanie użytkowników spełniających wymagania aktualnie zalogowanego użytkownika do listy
-        potentialMatchesList.clear();
         ValueEventListener listPotentialMatchesValueEventListener = new ValueEventListener() { //utworzenie listenera
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) { //dla każdego użytkownika w Users
                     User user = snapshot.getValue(User.class); //tworzy obiekt użytkownika którego wartości pól są danymi pobranymi z bazy
-
                     //wypisania kontrolne, do wywalenia
-                    Log.d("PREF", "sexP " + prefferedSex);
-                    Log.d("PREF", "sexU " + user.getSex());
-                    Log.d("PREF", "ageU " + user.getAge());
 
-                        if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
-                            if (Integer.parseInt(user.getAge()) <= Integer.parseInt(maxPrefAge) && Integer.parseInt(user.getAge()) >= Integer.parseInt(minPrefAge)) { //sprawdzenie dopasowania wieku
-                                if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {//sprawdzenie czy użytkownik nie będzie wyświetlał sam siebie
-                                    if(dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").hasChild(user.getUserId())) { //sprawdzenie czyistnieje już taka pozycja w tabeli connections, aby nie nadpisywać danych
+                    Log.d("PREF2", "nameU " + user.getName());
+                    Log.d("PREF2", "sexU " + user.getSex());
+                    Log.d("PREF2", "ageU " + user.getAge());
+
+                    if (prefferedSex.equals(user.getSex()) || prefferedSex.equals("both")) { //sprawdzenie dopasowania płci
+                        Log.d("PREF2", "nameU1sex " + user.getName());
+                        Log.d("PREF2", "sexU1 " + user.getSex());
+                        Log.d("PREF2", "ageU1 " + user.getAge());
+                        if (Integer.parseInt(user.getAge()) <= Integer.parseInt(maxPrefAge) && Integer.parseInt(user.getAge()) >= Integer.parseInt(minPrefAge)) { //sprawdzenie dopasowania wieku
+                            Log.d("PREF2", "nameU2age " + user.getName());
+                            Log.d("PREF2", "sexU2 " + user.getSex());
+                            Log.d("PREF2", "ageU2 " + user.getAge());
+                            if(!dbHelper.getCurrentUserId().equals(user.getUserId())) {//sprawdzenie czy użytkownik nie będzie wyświetlał sam siebie
+                                //if (isFirstTime) { //wykorzystanie flagi w celu sprawdzenia czy nie nadpiszemy listy
+                                    potentialMatchesList.add(user);
+                                //}
+
+
+
+                                    /*if(dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").hasChild(user.getUserId())) { //sprawdzenie czy istnieje już taka pozycja w tabeli connections, aby nie nadpisywać danych
                                         Log.d("OMG", "yes " + user.getUserId());
                                     } else {
                                         Log.d("OMG", "no " + user.getUserId());
                                         potentialMatchesList.add(user); //dodanie obiektu użytkownika spełniającego wymagania do listy potentialMatchesList
-                                    }
-                                }
+                                    }*/
                             }
                         }
+                    }
+
                 }
 
-                //wypisanie kontrolne, do wywalenia
-                for (User element : potentialMatchesList) {
-                    Log.d("PREF_USER", element.getEmail());
-                }
 
-                if (isFirstTime) { //wykorzystanie flagi w celu sprawdzenia czy nie nadpiszemy listy
-                    dbHelper.addPotentialMatchesToDb(potentialMatchesList);
+
+
+
+
+                /*if (isFirstTime) { //wykorzystanie flagi w celu sprawdzenia czy nie nadpiszemy listy
+                    //wypisanie kontrolne, do wywalenia
+                    for (User element : potentialMatchesList) {
+                        Log.d("PREF_USER", element.getEmail());
+                        dbHelper.getCurrentUserReference().child("Connections").child(element.getUserId()).child("Liked").setValue("not yet");
+                        dbHelper.getCurrentUserReference().child("Connections").child(element.getUserId()).child("Matched").setValue("not yet");
+                    }
                     addList();
                     isFirstTime = false;
+                }*/
+                if (isFirstTime) { //wykorzystanie flagi w celu sprawdzenia czy nie nadpiszemy listy
+                    isFirstTime = false;
+                    for (User element : potentialMatchesList) {
+                        Log.d("PREF3", element.getName());
+                        if (dataSnapshot.child(dbHelper.getCurrentUserId()).child("Connections").hasChild(element.getUserId())) {
+                            Log.d("PREFF", "Takie connections już istnieje!" + potentialMatchesList.size());
+                        } else {
+                            dbHelper.getCurrentUserReference().child("Connections").child(element.getUserId()).child("Liked").setValue("not yet");
+                            dbHelper.getCurrentUserReference().child("Connections").child(element.getUserId()).child("Matched").setValue("not yet");
+                            Log.d("PREFF", "ListaMatches w if: " + potentialMatchesList.size()); //wyświetlanie kontrolne, do wywalenia
+                        }
+                    }
+
+                    addList();
                 }
                 adapter.notifyDataSetChanged();//aktualizacja danych na adapterze
             }
@@ -281,10 +313,26 @@ public class FindNewFriendsFragment extends Fragment {
         Log.d("PREFL", "ListaMatches: " + potentialMatchesList.size()); //wyświetlanie kontrolne, do wywalenia
 
         for (User potentialMatch : potentialMatchesList) {
+            /*ValueEventListener displayPotentialMatchValueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.d("PREFL1", snapshot.child("Liked").getValue().toString());
+                    Log.d("PREFL2", snapshot.getKey());
+                    if (snapshot.child("Liked").getValue().equals("not yet")) {*/
             items.add(new ItemModel(potentialMatch.getEmail(), potentialMatch.getUserId(), potentialMatch.getName(), potentialMatch.getAge(), potentialMatch.getLocalisation(), potentialMatch.getMainPictureName(), potentialMatch.getImageUri(), potentialMatch.getDescription()));
-        }
+                    /*}
+                }
 
-        Log.d("PREFL", "ListaItem: " + items.size()); //wyświetlanie kontrolne do wywalenia
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            };
+
+            dbHelper.getDatabaseReference().child("Users").child(dbHelper.getCurrentUserId()).child("Connections").child(potentialMatch.getUserId()).addValueEventListener(displayPotentialMatchValueEventListener);
+        */
+        }
+        Log.d("PREFL", "ListaItem1: " + items.size()); //wyświetlanie kontrolne do wywalenia
 
     }
 }
