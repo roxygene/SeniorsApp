@@ -259,7 +259,7 @@ public class FindNewFriendsFragment extends Fragment {
                             potentialMatchesList2.add(element);
                         }
                     }
-                    addList();
+                    addItemModelList();
                 }
                 adapter.notifyDataSetChanged();//aktualizacja danych na adapterze
             }
@@ -274,7 +274,7 @@ public class FindNewFriendsFragment extends Fragment {
 
     }
 
-    private void addList() { //metoda tworzy obiekt item dla każdego użytkownika z listy potentialMatchesList
+    private void addItemModelList() { //metoda tworzy obiekt item dla każdego użytkownika z listy potentialMatchesList
         items.clear();
         Log.d("PREFL", "ListaMatches: " + potentialMatchesList.size()); //wyświetlanie kontrolne, do wywalenia
         Log.d("PREFL", "ListaMatches2: " + potentialMatchesList2.size()); //wyświetlanie kontrolne, do wywalenia

@@ -49,14 +49,6 @@ public class DataBaseHelper {
         return databaseReference.child("Users").child(currentUserId).setValue(user);
     }
 
-    /*public void addPotentialMatchesToDb(List<User> potentialMatchesList) {//dodanie potencjalnych par do tabeli Connections aktualnie zalogowanego użytkownika
-        for (User element : potentialMatchesList) {
-            currentUserReference.child("Connections").child(element.getUserId()).child("Liked").setValue("not yet");
-            currentUserReference.child("Connections").child(element.getUserId()).child("Matched").setValue("not yet");
-
-        }
-    }*/
-
     public StorageReference getStorageReference() {
         return storageReference;
     }

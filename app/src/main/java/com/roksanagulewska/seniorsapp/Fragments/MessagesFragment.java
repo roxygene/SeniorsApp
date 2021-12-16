@@ -1,10 +1,14 @@
 package com.roksanagulewska.seniorsapp.Fragments;
 
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +34,9 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class MessagesFragment extends Fragment {
+
+    ListView listView;
+    ArrayAdapter adapter = new ArrayAdapter<>();
 
     DataBaseHelper dbHelper = new DataBaseHelper();
     List<String> potentialMatchesList = new ArrayList<>(); //lista użytkowników z tabeli Connections zalogowanego użytkownika
@@ -84,8 +91,12 @@ public class MessagesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_messages, container, false);
+
+        View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
+
+        listView = rootView.findViewById(R.id.friends_list_view);
+
+        return rootView;
     }
 
     public void listLikedUsers() {
@@ -139,13 +150,18 @@ public class MessagesFragment extends Fragment {
                      }
                  }
 
-                 //testowe wyświetlenie listy par zalogowanego użytkownika
+                 //zamiana łańcucha z id usera na obiekt klasy User
                  for (String match : matchesList) {
                      Log.d("MATCHX", "matchesList: " + match);
-                     //dbHelper.getCurrentUserReference().child("Matches").child(match).setValue("yes");
+
+                     if (dataSnapshot.hasChild(match)) {
+                         User matchedUser = dataSnapshot.child(match).getValue(User.class);
+                         Log.d("MATCHX", matchedUser.getName());
+                         friendsList.add(matchedUser);
+                     }
                  }
 
-                 generateListOfFriends();
+                 addItemMatchModelList();
              }
 
              @Override
@@ -159,28 +175,18 @@ public class MessagesFragment extends Fragment {
 
      }
 
-
-    //ta metoda ma tworzyć listę userów pasujących do tych zapisanych w bazie w tabeli matches zalogowanego usera
-    private void generateListOfFriends() {
-
-        ValueEventListener isAMatchValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChildren()) {
-                    //for (DataSnapshot dataSnapshot : snapshot.getChildren())
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-
-        dbHelper.getDatabaseReference().child("Users").child(dbHelper.getCurrentUserId()).child("Matches").addValueEventListener(isAMatchValueEventListener);
-    }
-
     //metoda przekształcająca userów w itemMatchModel
+    private void addItemMatchModelList() {
+        friendsListToDisplay.clear();
+        Log.d("MATCHX", "Matches list: " + matchesList.size());
+        Log.d("MATCHX", "Friends list: " + friendsList.size());
+
+        for (User friend : friendsList) {
+            friendsListToDisplay.add(new ItemMatchModel(friend.getName(), friend.getAge(), friend.getMainPictureName(), friend.getImageUri(), friend.getUserId()));
+        }
+
+        Log.d("MATCHX", "Friends list to display: " + friendsListToDisplay.size());
+    }
 
 
 }
