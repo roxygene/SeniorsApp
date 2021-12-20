@@ -1,4 +1,4 @@
-package com.roksanagulewska.seniorsapp.SwipeCards;
+package com.roksanagulewska.seniorsapp.Matches;
 
 public class ItemMatchModel {
 
@@ -12,10 +12,9 @@ public class ItemMatchModel {
     public ItemMatchModel() {
     }
 
-    public ItemMatchModel(String userId, String name, String age, String imageName, String imageUri) {
+    public ItemMatchModel(String userId, String name, String imageName, String imageUri) {
         this.userId = userId;
         this.name = name;
-        this.age = age;
         this.imageName = imageName;
         this.imageUri = imageUri;
     }
@@ -50,13 +49,5 @@ public class ItemMatchModel {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
     }
 }

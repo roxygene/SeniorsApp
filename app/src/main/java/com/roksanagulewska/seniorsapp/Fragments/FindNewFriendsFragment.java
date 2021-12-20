@@ -107,8 +107,6 @@ public class FindNewFriendsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_find_new_friends, container, false);
         init(root);
         return root;
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_find_new_friends, container, false);
     }
 
     private void init(View root) { //ta metoda CHYBA inicjalizuje cały ten widok kart, przygotowuje i tp

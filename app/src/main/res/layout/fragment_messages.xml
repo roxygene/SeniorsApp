@@ -13,12 +13,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="40dp">
+            android:padding="10dp">
 
             <ListView
                 android:id="@+id/friends_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                tools:listitem="@layout/item_match"/>
 
 
 
