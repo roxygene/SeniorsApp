@@ -1,20 +1,15 @@
 package com.roksanagulewska.seniorsapp.SwipeCards;
 
-import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.storage.StorageReference;
-import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.R;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.ViewHolder> {
@@ -28,6 +23,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d("MATCHX", "cooooof1");
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.item_card, parent, false);
         return new ViewHolder(view);
@@ -36,7 +32,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.setData(items.get(position));
-        //currentItem = items.get(position);
+        Log.d("MATCHX", "cooooof2");
     }
 
     @Override
@@ -44,7 +40,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         return items.size();
     } //metoda sprawdzająca ilość elementów do wyświetlenia
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
         TextView name, age, localisation, description;
         ViewHolder(@NonNull View itemView) {

@@ -10,21 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp">
+            android:layout_height="wrap_content"
+            android:id="@+id/matches_recycler_view"
+            android:scrollbars="vertical">
 
-            <ListView
-                android:id="@+id/friends_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/item_match"/>
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        </androidx.recyclerview.widget.RecyclerView>
     </ScrollView>
 
 </FrameLayout>

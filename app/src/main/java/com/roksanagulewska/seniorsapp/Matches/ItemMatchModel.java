@@ -3,7 +3,6 @@ package com.roksanagulewska.seniorsapp.Matches;
 public class ItemMatchModel {
 
     private String name;
-    private String age;
     private String imageName;
     private String imageUri;
     private String userId;

@@ -5,22 +5,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.roksanagulewska.seniorsapp.DataBase.DataBaseHelper;
 import com.roksanagulewska.seniorsapp.DataBase.User;
+import com.roksanagulewska.seniorsapp.Matches.MatchesListAdapter;
 import com.roksanagulewska.seniorsapp.R;
 import com.roksanagulewska.seniorsapp.Matches.ItemMatchModel;
+import com.roksanagulewska.seniorsapp.SwipeCards.ItemModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,19 +34,18 @@ import java.util.Map;
  * Use the {@link MessagesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MessagesFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class MessagesFragment extends Fragment {
 
-    ListView listView;
-
-
+    private RecyclerView matchesRecyclerView;
+    private MatchesListAdapter adapter;
+    private RecyclerView.LayoutManager manager;
     DataBaseHelper dbHelper = new DataBaseHelper();
     List<String> potentialMatchesList = new ArrayList<>(); //lista użytkowników z tabeli Connections zalogowanego użytkownika
     List<String> matchesList = new ArrayList<>(); //lista użytkowników z którymi zalogowany użytkownik został sparowany, z tego robimy tabelę matches
     List<User> friendsList = new ArrayList<>(); //z tabeli matches wyciągamy wszystkie id i dodajemy do tej listy
-    List<ItemMatchModel> friendsListToDisplay = new ArrayList<>(); //lista tych item modeli do wyświetlania
+    List<ItemMatchModel> friendsListToDisplay = new ArrayList<>(); //lista item modeli do wyświetlenia
     User user;
 
-    ArrayAdapter adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -85,7 +86,9 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemClic
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
         listLikedUsers();
+
     }
 
     @Nullable
@@ -95,11 +98,19 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemClic
 
         View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
 
-        adapter = new ArrayAdapter<ItemMatchModel>(getActivity(), android.R.layout.simple_list_item_1, friendsListToDisplay);
 
-        listView = rootView.findViewById(R.id.friends_list_view);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
+        matchesRecyclerView = rootView.findViewById(R.id.matches_recycler_view);
+        manager = new LinearLayoutManager(getContext());
+        matchesRecyclerView.setLayoutManager(manager);
+        //może będę tego potrzebować
+        //matchesRecyclerView.setNestedScrollingEnabled(false);
+        //matchesRecyclerView.setHasFixedSize(true);
+        /*manager = new LinearLayoutManager(getContext());
+        matchesRecyclerView.setLayoutManager(manager);
+        adapter = new MatchesListAdapter(friendsListToDisplay, getContext());
+        Log.d("MATCHX", "adapter");
+        matchesRecyclerView.setAdapter(adapter);*/
+
 
         return rootView;
     }
@@ -167,6 +178,7 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemClic
                  }
 
                  addItemMatchModelList();
+                 adapter.notifyDataSetChanged();
              }
 
              @Override
@@ -187,28 +199,14 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemClic
         Log.d("MATCHX", "Friends list: " + friendsList.size());
 
         for (User friend : friendsList) {
-            friendsListToDisplay.add(new ItemMatchModel(friend.getName(), friend.getMainPictureName(), friend.getImageUri(), friend.getUserId()));
+            friendsListToDisplay.add(new ItemMatchModel(friend.getUserId(), friend.getName(), friend.getMainPictureName(), friend.getImageUri()));
         }
 
         Log.d("MATCHX", "Friends list to display: " + friendsListToDisplay.size());
-    }
 
-
-    /**
-     * Callback method to be invoked when an item in this AdapterView has
-     * been clicked.
-     * <p>
-     * Implementers can call getItemAtPosition(position) if they need
-     * to access the data associated with the selected item.
-     *
-     * @param parent   The AdapterView where the click happened.
-     * @param view     The view within the AdapterView that was clicked (this
-     *                 will be a view provided by the adapter)
-     * @param position The position of the view in the adapter.
-     * @param id       The row id of the item that was clicked.
-     */
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_LONG).show();
+        adapter = new MatchesListAdapter(friendsListToDisplay, getContext());
+        Log.d("MATCHX", "adapter");
+        matchesRecyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 }
