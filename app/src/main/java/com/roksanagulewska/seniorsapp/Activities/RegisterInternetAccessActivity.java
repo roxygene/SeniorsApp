@@ -20,17 +20,11 @@ public class RegisterInternetAccessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity_internet_access);
+        setContentView(R.layout.register_activity_internet_access);
 
         tryAgainBtn = findViewById(R.id.tryAgainButton);
 
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * Called when a view has been clicked.
-             *
-             * @param view The view that was clicked.
-             */
             @Override
             public void onClick(View view) {
 

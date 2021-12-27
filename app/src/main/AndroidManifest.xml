@@ -15,7 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NoActionBar">
-        <activity android:name=".Activities.DeleteAccountActivity"></activity>
+        <activity android:name=".Activities.ChangePictureActivity"></activity>
+        <activity android:name=".Activities.MatchProfileActivity" />
+        <activity android:name=".Activities.DeleteMatchActivity" />
+        <activity android:name=".Activities.ChatActivity" />
+        <activity android:name=".Activities.DeleteAccountActivity" />
         <activity android:name=".Activities.ProfileInfoActivity" />
         <activity android:name=".Activities.LoginInternetAccessActivity" />
         <activity android:name=".Activities.RegisterInternetAccessActivity" />

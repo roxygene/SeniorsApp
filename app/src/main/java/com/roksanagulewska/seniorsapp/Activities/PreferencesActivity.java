@@ -67,7 +67,7 @@ public class PreferencesActivity extends AppCompatActivity {
                     if (minAge < 18 || maxAge < 18 || minAge > 130 || maxAge > 130 || minAge >= maxAge) {
                         Toast.makeText(getApplicationContext(), "Insert correct age, it must be greater or equal to 18.", Toast.LENGTH_SHORT).show();
                     } else {
-                        if (femalesCB.isChecked() && malesCB.isChecked()) { // sprawdzenie zaznaczenia checkboxów
+                        if (femalesCB.isChecked() && malesCB.isChecked()) { //sprawdzenie zaznaczenia checkboxów
                             preferredSex = "both";
                         }else if (femalesCB.isChecked() && !malesCB.isChecked()) {
                             preferredSex = "female";

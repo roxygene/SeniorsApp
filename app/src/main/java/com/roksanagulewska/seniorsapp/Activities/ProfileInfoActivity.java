@@ -117,14 +117,15 @@ public class ProfileInfoActivity extends AppCompatActivity {
                         dbHelper.addUserToDB(user).addOnSuccessListener(success-> //wywołanie metody dodającej użytkownika do bazy ze sprawdzeniem czy się udało
                         {
                             Toast.makeText(getApplicationContext(), "User added to database!", Toast.LENGTH_SHORT).show();
+                            Intent navIntent = new Intent(getApplicationContext(), NavigationActivity.class);
+                            startActivity(navIntent);
+                            finish();
                         }).addOnFailureListener(error->
                         {
                             Toast.makeText(getApplicationContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
                         });
 
-                        Intent navIntent = new Intent(getApplicationContext(), NavigationActivity.class);
-                        startActivity(navIntent);
-                        finish();
+
                     }
                 }
 
@@ -216,6 +217,7 @@ public class ProfileInfoActivity extends AppCompatActivity {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
+                Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {

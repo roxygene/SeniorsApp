@@ -41,7 +41,7 @@ public class MessagesFragment extends Fragment {
     private RecyclerView.LayoutManager manager;
     DataBaseHelper dbHelper = new DataBaseHelper();
     List<String> potentialMatchesList = new ArrayList<>(); //lista użytkowników z tabeli Connections zalogowanego użytkownika
-    List<String> matchesList = new ArrayList<>(); //lista użytkowników z którymi zalogowany użytkownik został sparowany, z tego robimy tabelę matches
+    List<String> matchesList = new ArrayList<>(); //lista użytkowników z którymi zalogowany użytkownik został sparowany
     List<User> friendsList = new ArrayList<>(); //z tabeli matches wyciągamy wszystkie id i dodajemy do tej listy
     List<ItemMatchModel> friendsListToDisplay = new ArrayList<>(); //lista item modeli do wyświetlenia
     User user;
@@ -102,16 +102,6 @@ public class MessagesFragment extends Fragment {
         matchesRecyclerView = rootView.findViewById(R.id.matches_recycler_view);
         manager = new LinearLayoutManager(getContext());
         matchesRecyclerView.setLayoutManager(manager);
-        //może będę tego potrzebować
-        //matchesRecyclerView.setNestedScrollingEnabled(false);
-        //matchesRecyclerView.setHasFixedSize(true);
-        /*manager = new LinearLayoutManager(getContext());
-        matchesRecyclerView.setLayoutManager(manager);
-        adapter = new MatchesListAdapter(friendsListToDisplay, getContext());
-        Log.d("MATCHX", "adapter");
-        matchesRecyclerView.setAdapter(adapter);*/
-
-
         return rootView;
     }
 

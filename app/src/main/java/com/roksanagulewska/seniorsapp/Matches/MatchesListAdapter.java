@@ -1,6 +1,8 @@
 package com.roksanagulewska.seniorsapp.Matches;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.roksanagulewska.seniorsapp.Activities.ChatActivity;
+import com.roksanagulewska.seniorsapp.Fragments.MessagesFragment;
 import com.roksanagulewska.seniorsapp.R;
 import com.squareup.picasso.Picasso;
 import java.util.List;
@@ -46,6 +51,10 @@ public class MatchesListAdapter extends RecyclerView.Adapter<MatchesListAdapter.
     class MatchesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView image;
         TextView name;
+
+        String clickedUserName;
+        String clickedUserId;
+
         MatchesViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -73,12 +82,25 @@ public class MatchesListAdapter extends RecyclerView.Adapter<MatchesListAdapter.
                         .into(image);
             }
             name.setText(data.getName());
+
+            clickedUserId = data.getUserId();
+            clickedUserName = data.getName();
+
         }
 
 
         @Override
         public void onClick(View v) {
             Log.d("MATCHX", "przycisk");
+            Log.d("MATCHX", "NAMEEEE: " + clickedUserName);
+
+            Intent chatIntent = new Intent(context, ChatActivity.class);
+            Bundle chatBundle = new Bundle();
+            chatBundle.putString("matchId", clickedUserId);
+            chatIntent.putExtras(chatBundle);
+            context.startActivity(chatIntent);
+
+
         }
 
     }
