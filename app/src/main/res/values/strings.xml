@@ -50,7 +50,7 @@
     <string name="delete1">Are you sure you want to delete your account?</string>
     <string name="delete2">yes</string>
     <string name="delete3">no</string>
-    <string name="chat1">Type a message</string>
+    <string name="chat1">Type a message...</string>
     <string name="chat2">send</string>
     <string name="delete_match1">Are you sure you want to delete contact?</string>
 

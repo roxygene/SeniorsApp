@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.roksanagulewska.seniorsapp.Chat.ChatAdapter;
@@ -17,12 +19,14 @@ import com.roksanagulewska.seniorsapp.Fragments.MessagesFragment;
 import com.roksanagulewska.seniorsapp.Matches.MatchesListAdapter;
 import com.roksanagulewska.seniorsapp.R;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView chatRecyclerView;
     private ChatAdapter adapter;
     private RecyclerView.LayoutManager manager;
     DataBaseHelper dbHelper = new DataBaseHelper();
-
     MaterialButton backBtn, profileBtn, deleteBtn, sendBtn;
     EditText messageEditTxt;
     TextView matchNameTxtView;
@@ -86,9 +90,28 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String messageToSend = messageEditTxt.getText().toString().trim();
-
-                //.....
+                if(messageToSend.equals("")) {
+                    Toast.makeText(getApplicationContext(), "You can't send an empty message!", Toast.LENGTH_SHORT).show();
+                } else {
+                    if(messageToSend.length() >= 251) {
+                        Toast.makeText(getApplicationContext(), "Your message is too long! Type less than 250 characters.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Log.d("CHATX", "poprawnie");
+                        sendMessage(dbHelper.getCurrentUserId(), matchId, messageToSend);
+                        messageEditTxt.setText("");
+                    }
+                }
             }
         });
+    }
+
+    private void sendMessage(String sender, String receiver, String message) {
+        Log.d("CHATX", "jestm w senmessage");
+        Map<String, Object> map = new HashMap<>();
+        map.put("sender", sender);
+        map.put("receiver", receiver);
+        map.put("message", message);
+        dbHelper.getDatabaseReference().child("Chats").push().setValue(map);
+
     }
 }
