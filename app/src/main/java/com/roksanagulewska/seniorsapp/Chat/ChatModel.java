@@ -2,51 +2,40 @@ package com.roksanagulewska.seniorsapp.Chat;
 
 public class ChatModel {
 
-    private String name;
-    private String imageName;
-    private String imageUri;
-    private String userId;
-
+    private String sender;
+    private String receiver;
+    private String message;
 
     public ChatModel() {
     }
 
-    public ChatModel(String userId, String name, String imageName, String imageUri) {
-        this.userId = userId;
-        this.name = name;
-        this.imageName = imageName;
-        this.imageUri = imageUri;
+    public ChatModel(String sender, String receiver, String message) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message;
     }
 
-    public String getImageName() {
-        return imageName;
+    public String getSender() {
+        return sender;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public String getImageUri() {
-        return imageUri;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getMessage() {
+        return message;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
